@@ -1,0 +1,4 @@
+build/
+dist/
+rpiplc_lib.egg-info/
+venv/
