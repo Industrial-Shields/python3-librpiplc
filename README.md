@@ -21,7 +21,9 @@ $`python3 setup.py install`
 ### Once installed, make sure to comment the following lines from config.txt file:
 
 You can find the file here:
-$ `cd /boot/config.txt`
+
+ _/boot/config.txt_
+ 
 > Reboot the PLC once done.
 
 ```
