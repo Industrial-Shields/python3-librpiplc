@@ -18,7 +18,12 @@ After which, run the following command to install the library:
 
 $`python3 setup.py install`
 
-### Once installed, make sure to comment the following lines from config.txt file.
+### Once installed, make sure to comment the following lines from config.txt file:
+
+You can find the file here:
+$ `cd /boot/config.txt`
+> Reboot the PLC once done.
+
 ```
 #dtoverlay=mcp23017,noints,mcp23008,addr=0x20
 #dtoverlay=mcp23017,noints,mcp23008,addr=0x21
