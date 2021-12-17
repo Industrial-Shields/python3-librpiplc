@@ -104,47 +104,48 @@ _relay()_
 ```
 from rpiplc_lib import rpiplc
 
-def digitalreadwrite():
-    rpiplc.pin_mode("Q0.0",1)
-    
+def digital_read_write():
+    rpiplc.pin_mode("I0.0",rpiplc.INPUT)
+    read_value=rpiplc.digital_read("I0.0")
+    print("The I0.0 is reading: {}".format(read_value))
+ 
+    rpiplc.pin_mode("Q0.0",rpiplc.OUTPUT)
     rpiplc.digital_write("Q0.0",rpiplc.HIGH)
     rpiplc.delay(1000)
     rpiplc.digital_write("Q0.0",rpiplc.LOW)
     rpiplc.delay(1000)
     
     
-    
-def analogreadwrite():
-    rpiplc.pin_mode("A1.0",rpiplc.INPUT)
-    
-    read_value=rpiplc.analog_read("A1.0")
-    print("The A1.0 is reading : ",read_value)
-    rpiplc.pin_mode("A1.1",rpiplc.OUTPUT)
-    rpiplc.analog_write("A1.1",1024) # 2.5v Output
+def analog_read_write():
+    rpiplc.pin_mode("I0.2",rpiplc.INPUT)
+    read_value=rpiplc.analog_read("I0.2") # 0 - 2047
+    print("The I0.2 is reading: {}".format(read_value))
+
+    rpiplc.pin_mode("A0.0",rpiplc.OUTPUT)  	
+    rpiplc.analog_write("A0.0",1024) # 2.5v Output
     rpiplc.delay(2000)
-    rpiplc.analog_write("A1.1",4095) # 10v Output
+    rpiplc.analog_write("A0.0",4095) # 10v Output
     rpiplc.delay(2000)
-    rpiplc.analog_write("A1.1",0)
-    
-    
-    
-def relaytest():
+    rpiplc.analog_write("A0.0",0)
+
+
+def relay_test():
     rpiplc.pin_mode("R0.1",rpiplc.OUTPUT)
-    
     rpiplc.digital_write("R0.1",rpiplc.HIGH)
     rpiplc.delay(1000)
     rpiplc.digital_write("R0.1",rpiplc.LOW)
     rpiplc.delay(1000)
     
     
-    
 def main():
     rpiplc.init("RPIPLC_57R")
-    
+
     while True:
-        digitalreadwrite()
-        analogreadwrite()
-        relaytest()
+        digital_read_write()
+        analog_read_write()
+        relay_test()
+
+
 if __name__ == "__main__":
     main()
 ```
