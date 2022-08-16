@@ -12,8 +12,14 @@ It performs the following functions:
 ## Installation
 To install this library, You need to first clone this repository to your PLC using the following command:
 
-$`git clone -b <tagname> https://github.com/Industrial-Shields/rpiplc-python3-lib`
+$`git clone -b <tagname> https://github.com/Industrial-Shields/rpiplc-python3-lib` 
+```
+tagname = 1.X.X = RPI PLC Version 3
 
+tagname = 2.X.X = RPI PLC Version 4
+
+You can find the available tags here: https://github.com/Industrial-Shields/rpiplc-python3-lib/tags
+```
 After which, run the following command to install the library:
 
 $`python3 setup.py install`
