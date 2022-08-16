@@ -12,7 +12,7 @@ It performs the following functions:
 ## Installation
 To install this library, You need to first clone this repository to your PLC using the following command:
 
-$`git clone https://github.com/Industrial-Shields/rpiplc-python3-lib`
+$`git clone -b <tagname> https://github.com/Industrial-Shields/rpiplc-python3-lib`
 
 After which, run the following command to install the library:
 
