@@ -86,7 +86,7 @@ It is a good practice to initialize the pins as inputs or outpust, for this use 
 Pin Functions:
 _analog_read()_
 
-`rpiplc.analog_read("A0.0")`
+`rpiplc.analog_read("I0.2")`
 
 _analog_write()_
 
@@ -94,7 +94,7 @@ _analog_write()_
 
 _digital_read()_
 
-`rpiplc.digital_read("Q0.0")`
+`rpiplc.digital_read("I0.0")`
 
 _digital_write()_
 
