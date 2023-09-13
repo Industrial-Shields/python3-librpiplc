@@ -7,10 +7,13 @@ It performs the following functions:
 * Analog write
 * Digital Read
 * Digital write
-* Relay 
+* Relay
+
+## Requirements
+You must first install the [rpiplc-lib](https://github.com/Industrial-Shields/rpiplc-lib), as this library depends on it.
 
 ## Installation
-To install this library, You need to first clone this repository to your PLC using the following command:
+To install this library, you will need to clone this repository to your PLC using the following command:
 
 $`git clone -b <tagname> https://github.com/Industrial-Shields/rpiplc-python3-lib` 
 ```
