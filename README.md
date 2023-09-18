@@ -27,7 +27,7 @@ After which, run the following command to install the library:
 
 $`python3 setup.py install`
 
-### Once installed, make sure to comment the following lines from config.txt file:
+### (Only for Raspberry PLC v3) Once installed, make sure to comment the following lines from config.txt file:
 
 You can find the file here:
 
