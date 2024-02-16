@@ -18,12 +18,14 @@ def init(version_name, model_name):
 
     _rpiplc.initPins()
 
-    if version_name == "RPIPLC_V4":
+    if version_name == "RPIPLC_V5":
+        from . models_v5 import hw
+    elif version_name == "RPIPLC_V4":
         from . models_v4 import hw
     elif version_name == "RPIPLC_V3":
         from . models_v3 import hw
     else:
-        raise UnknownPLCConf(f"Unknown version {version_name}, the only available versions are RPIPLC_V4 and RPIPLC_V3")
+        raise UnknownPLCConf(f"Unknown version {version_name}, the only available versions are RPIPLC_V5, RPIPLC_V4 and RPIPLC_V3")
 
     available_models = hw.keys()
     if model_name not in available_models:

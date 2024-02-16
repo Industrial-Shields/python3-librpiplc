@@ -158,16 +158,16 @@ relay2 = {
 	"R2.8": 0x0000400C,
 }
 
-hw = dict(
-        RPIPLC_19R = {**relay0},
-        RPIPLC_21 = {**analog0},
-        RPIPLC_38AR = {**analog0, **relay1},
-        RPIPLC_38R = {**relay0, **relay1},
-        RPIPLC_42 = {**analog0, **analog1},
-        RPIPLC_50RRA = {**relay0, **relay1, **analog2},
-        RPIPLC_53ARR = {**analog0, **relay1, **relay2},
-        RPIPLC_54ARA = {**analog0, **relay1, **analog2},
-        RPIPLC_57AAR = {**analog0, **analog1, **relay2},
-        RPIPLC_57R = {**relay0, **relay1, **relay2},
-        RPIPLC_58 = {**analog0, **analog1, **analog2},
-        )
+hw = {
+	"RPIPLC_19R": {**relay0},
+        "RPIPLC_21": {**analog0},
+        "RPIPLC_38AR": {**analog0, **relay1},
+        "RPIPLC_38R": {**relay0, **relay1},
+        "RPIPLC_42": {**analog0, **analog1},
+        "RPIPLC_50RRA": {**relay0, **relay1, **analog2},
+        "RPIPLC_53ARR": {**analog0, **relay1, **relay2},
+        "RPIPLC_54ARA": {**analog0, **relay1, **analog2},
+        "RPIPLC_57AAR": {**analog0, **analog1, **relay2},
+        "RPIPLC_57R": {**relay0, **relay1, **relay2},
+        "RPIPLC_58": {**analog0, **analog1, **analog2},
+}
