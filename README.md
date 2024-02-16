@@ -1,160 +1,170 @@
-# Python Library for Industrial Shields Raspberry PLCs
+# RPIPLC-PYTHON3-LIB library
 
-## Summary
-This library is developed for Industrial shields Raspberry PLCs and is only supported by Python3.
-It performs the following functions:
-* Analog Read
-* Analog write
-* Digital Read
-* Digital write
-* Relay
+### by Industrial Shields
+rpiplc-python3-lib implements some common applications on industrial environments for Raspberry based Industrial Shields PLCs. It performs the following functions:
+* Analog reads and write
+* Digital reads and writes
+* Relay controlling
 
-## Requirements
+
+## Prerequisites
+
+### One of our PLCs: https://www.industrialshields.com/
+
+
+### Installing rpiplc-lib
+
 You must first install the [rpiplc-lib](https://github.com/Industrial-Shields/rpiplc-lib), as this library depends on it.
 
-## Installation
-To install this library, you will need to clone this repository to your PLC using the following command:
 
-$`git clone -b <tagname> https://github.com/Industrial-Shields/rpiplc-python3-lib` 
+### Installing pip
+
+1. Start by updating the package manager:
 ```
-tagname = v1.X.X = RPI PLC Version 3
-
-tagname = v2.X.X = RPI PLC Version 4
-
-You can find the available tags here: https://github.com/Industrial-Shields/rpiplc-python3-lib/tags
+sudo apt update
 ```
-After which, run the following command to install the library:
 
-$`python3 setup.py install`
-
-### (Only for Raspberry PLC v3) Once installed, make sure to comment the following lines from config.txt file:
-
-You can find the file here:
-
- _/boot/config.txt_
- 
-> Reboot the PLC once done.
-
+2. Run the following command to install pip:
 ```
-#dtoverlay=mcp23017,noints,mcp23008,addr=0x20
-#dtoverlay=mcp23017,noints,mcp23008,addr=0x21
-#dtoverlay=i2c-pwm-pca9685a,addr=0x40
-#dtoverlay=i2c-pwm-pca9685a,addr=0x41
-#dtoverlay=ads1015,addr=0x48
-#dtparam=cha_enable=true,cha_gain=1
-#dtparam=chb_enable=true,chb_gain=1
-#dtparam=chc_enable=true,chc_gain=1
-#dtparam=chd_enable=true,chd_gain=
-#dtoverlay=ads1015,addr=0x49
-#dtparam=cha_enable=true,cha_gain=1
-#dtparam=chb_enable=true,chb_gain=1
-#dtparam=chc_enable=true,chc_gain=1
-#dtparam=chd_enable=true,chd_gain=1
-#dtoverlay=ads1015,addr=0x4a
-#dtparam=cha_enable=true,cha_gain=1
-#dtparam=chb_enable=true,chb_gain=1
-#dtparam=chc_enable=true,chc_gain=1
-#dtparam=chd_enable=true,chd_gain=1
-#dtoverlay=ads1015,addr=0x4b
-#dtparam=cha_enable=true,cha_gain=1
-#dtparam=chb_enable=true,chb_gain=1
-#dtparam=chc_enable=true,chc_gain=1
-#dtparam=chd_enable=true,chd_gain=1
+sudo apt install git python3-pip
 ```
+
+3. Verify the installation by typing the following commands, which will print the versions of each package:
+```
+pip --version
+```
+
+
+
+## Installing
+
+1. Go to the directory where you want the library repository to be. For example, in your *home*:
+```
+cd
+```
+
+2. Run the following command to clone the repository:
+```
+git clone -b <tagname> https://github.com/Industrial-Shields/rpiplc-python3-lib.git
+```
+Where `<tagname>` is the version you wish to download. Before this unification, you had to choose between versions 1.X.X (for V3 PLCs) or 2.X.X (for V4 PLCs). As of 3.X.X this library is compatible with our PLCs regardless of it's version.
+You can check the available versions in here: https://github.com/Industrial-Shields/rpiplc-python3-lib/tags
+
+3. Go to the library directory and install the library with the following command:
+```
+cd rpiplc-lib/
+sudo python -m pip install . --break-system-packages --root-user-action=ignore
+```
+
 
 ## API
-PLC initialization
+To start using the library, you need to import it with the following statement:
+``` python
+from librpiplc import rpiplc
+```
 
-`rpiplc.init("RPIPLC_57R")`
+And to set it up, you must call `rpiplc.init("VERSION_NAME", "MODEL_NAME")`, where VERSION_NAME and MODEL_NAME are the [available PLC versions](#available-versions) and [available PLC models](#available-models) respectively. This function must be called once every time you start your program.
 
-You can choose from the below model list to fill the parameter.
-PLC Model list:
-- RPIPLC_19R 
-- RPIPLC_21
-- RPIPLC_38AR 
-- RPIPLC_38R
-- RPIPLC_42
-- RPIPLC_50RRA
-- RPIPLC_53ARR
-- RPIPLC_54ARA
-- RPIPLC_57AAR 
-- RPIPLC_57R 
-- RPIPLC_58 
+Finally, it is a good practice to initialize the pins you want to use as INPUTS or OUTPUTS. You can do so with the `rpiplc.pin_mode(pin_name, mode)` function. For example, if you want to read from the **I0.2** input:
+``` python
+rpiplc.pin_mode("I0.2", rpiplc.INPUT)
+```
 
-Pin initialization:
-It is a good practice to initialize the pins as inputs or outpust, for this use the following code:
+The functions to read and write are the following:
+``` python
+digital_read(): rpiplc.digital_read(PIN_NAME) # It returns either rpiplc.HIGH (enabled) or rpiplc.LOW (disabled)
 
-`pin_mode(pin_name, mode)`  _# mode can be rpiplc.OUTPUT ;rpiplc.INPUT or 1 ; 0_
+digital_write(): rpiplc.digital_write(PIN_NAME, VALUE) # Where value is either rpiplc.HIGH (enabled) or rpiplc.LOW (disabled)
+# It can be used to control both digital outputs and relays.
 
-Pin Functions:
-_analog_read()_
+analog_read(): rpiplc.analog_read(PIN_NAME) # It returns a 12-bit number that goes from 0 to 4095 (0 to 10V)
 
-`rpiplc.analog_read("I0.2")`
+analog_write(): rpiplc.analog_write(PIN_NAME, VALUE) # Where value is a 12-bit number that goes from 0 to 4095 (0 to 10V)
 
-_analog_write()_
+delay(): rpiplc.delay(MS) # Where MS is the number of milliseconds to block the execution before continuing
+```
 
-`rpiplc.analog_write("A0.0",value)` _# Here the value is in the range of 0 to 4095. 0 being 0V and 4095 is 10v_
-
-_digital_read()_
-
-`rpiplc.digital_read("I0.0")`
-
-_digital_write()_
-
-`rpiplc.digital_write("Q0.0",rpiplc.HIGH)`
-
-_relay()_
-
-`rpiplc.digital_write("R0.1",rpiplc.HIGH)`
 
 
 ## Examples
 
-```
-from rpiplc_lib import rpiplc
+``` python
+from librpiplc import rpiplc
 
 def digital_read_write():
-    rpiplc.pin_mode("I0.0",rpiplc.INPUT)
-    read_value=rpiplc.digital_read("I0.0")
-    print("The I0.0 is reading: {}".format(read_value))
- 
-    rpiplc.pin_mode("Q0.0",rpiplc.OUTPUT)
-    rpiplc.digital_write("Q0.0",rpiplc.HIGH)
-    rpiplc.delay(1000)
-    rpiplc.digital_write("Q0.0",rpiplc.LOW)
-    rpiplc.delay(1000)
-    
-    
-def analog_read_write():
-    rpiplc.pin_mode("I0.2",rpiplc.INPUT)
-    read_value=rpiplc.analog_read("I0.2") # 0 - 2047
-    print("The I0.2 is reading: {}".format(read_value))
+	rpiplc.pin_mode("I0.0",rpiplc.INPUT)
+	read_value=rpiplc.digital_read("I0.0")
+	print("The I0.0 is reading: {}".format(read_value))
 
-    rpiplc.pin_mode("A0.0",rpiplc.OUTPUT)  	
-    rpiplc.analog_write("A0.0",1024) # 2.5v Output
-    rpiplc.delay(2000)
-    rpiplc.analog_write("A0.0",4095) # 10v Output
-    rpiplc.delay(2000)
-    rpiplc.analog_write("A0.0",0)
+	rpiplc.pin_mode("Q0.0",rpiplc.OUTPUT)
+	rpiplc.digital_write("Q0.0",rpiplc.HIGH)
+	rpiplc.delay(1000)
+	rpiplc.digital_write("Q0.0",rpiplc.LOW)
+	rpiplc.delay(1000)
+
+
+def analog_read_write():
+	rpiplc.pin_mode("I0.2",rpiplc.INPUT)
+	read_value=rpiplc.analog_read("I0.2") # 0 - 2047
+	print("The I0.2 is reading: {}".format(read_value))
+
+	rpiplc.pin_mode("A0.0",rpiplc.OUTPUT)
+	rpiplc.analog_write("A0.0",1024) # 2.5v Output
+	rpiplc.delay(2000)
+	rpiplc.analog_write("A0.0",4095) # 10v Output
+	rpiplc.delay(2000)
+	rpiplc.analog_write("A0.0",0)
 
 
 def relay_test():
-    rpiplc.pin_mode("R0.1",rpiplc.OUTPUT)
-    rpiplc.digital_write("R0.1",rpiplc.HIGH)
-    rpiplc.delay(1000)
-    rpiplc.digital_write("R0.1",rpiplc.LOW)
-    rpiplc.delay(1000)
-    
-    
-def main():
-    rpiplc.init("RPIPLC_57R")
+	rpiplc.pin_mode("R0.1",rpiplc.OUTPUT)
+	rpiplc.digital_write("R0.1",rpiplc.HIGH)
+	rpiplc.delay(1000)
+	rpiplc.digital_write("R0.1",rpiplc.LOW)
+	rpiplc.delay(1000)
 
-    while True:
-        digital_read_write()
-        analog_read_write()
-        relay_test()
+
+def main():
+	rpiplc.init("RPIPLC_V4", "RPIPLC_57R")
+
+	while True:
+		digital_read_write()
+		analog_read_write()
+		relay_test()
 
 
 if __name__ == "__main__":
     main()
+```
+
+
+
+## References
+
+1. [Available PLC versions](#available-versions)
+1. [Available PLC models](#available-models)
+
+
+
+### <a name="available-versions"></a>Available PLC versions
+```
+RPIPLC_V3 (deprecated)
+RPIPLC_V4
+RPIPLC_V5
+```
+
+
+### <a name="available-models"></a>Available PLC models
+```
+RPIPLC_19R
+RPIPLC_21
+RPIPLC_38AR
+RPIPLC_38R
+RPIPLC_42
+RPIPLC_50RRA
+RPIPLC_53ARR
+RPIPLC_54ARA
+RPIPLC_57AAR
+RPIPLC_57R
+RPIPLC_58
 ```
