@@ -1,10 +1,11 @@
-# RPIPLC-PYTHON3-LIB library
+# python3-librpiplc
 
 ### by Industrial Shields
-rpiplc-python3-lib implements some common applications on industrial environments for Raspberry based Industrial Shields PLCs. It performs the following functions:
+**python3-librpiplc** provides a Python wrapper for the librpiplc C library, enabling Python applications to interface with the GPIOs of Raspberry Pi based Industrial Shields PLCs:
 * Analog reads and write
 * Digital reads and writes
 * Relay controlling
+
 
 
 ## Prerequisites
@@ -12,12 +13,12 @@ rpiplc-python3-lib implements some common applications on industrial environment
 ### One of our PLCs: https://www.industrialshields.com/
 
 
-### Installing rpiplc-lib
+### Installing librpiplc
 
-You must first install the [rpiplc-lib](https://github.com/Industrial-Shields/rpiplc-lib), as this library depends on it.
+You must first install the [librpiplc](https://github.com/Industrial-Shields/librpiplc), as this library depends on it.
 
 
-### Installing pip
+### Installing git and pip
 
 1. Start by updating the package manager:
 ```
@@ -45,14 +46,14 @@ cd
 
 2. Run the following command to clone the repository:
 ```
-git clone -b <tagname> https://github.com/Industrial-Shields/rpiplc-python3-lib.git
+git clone -b <tagname> https://github.com/Industrial-Shields/python3-librpiplc
 ```
 Where `<tagname>` is the version you wish to download. Before this unification, you had to choose between versions 1.X.X (for V3 PLCs) or 2.X.X (for V4 PLCs). As of 3.X.X this library is compatible with our PLCs regardless of it's version.
-You can check the available versions in here: https://github.com/Industrial-Shields/rpiplc-python3-lib/tags
+You can check the available versions in here: https://github.com/Industrial-Shields/python3-librpiplc/tags
 
 3. Go to the library directory and install the library with the following command:
 ```
-cd rpiplc-lib/
+cd python3-librpiplc/
 sudo python -m pip install . --break-system-packages --root-user-action=ignore
 ```
 
