@@ -158,16 +158,25 @@ relay2 = {
 	"R2.8": 0x0000400C,
 }
 
+extras = {
+	"PIN8": 8,
+	"PWM3": 0x00004109,
+	"PWM2": 0x0000410A,
+	"PWM1": 0x0000410B,
+	"EXP1_RST": 0x00004008,
+	"EXP2_RST": 0x0000400A,
+}
+
 hw = {
-	"RPIPLC_19R": {**relay0},
-        "RPIPLC_21": {**analog0},
-        "RPIPLC_38AR": {**analog0, **relay1},
-        "RPIPLC_38R": {**relay0, **relay1},
-        "RPIPLC_42": {**analog0, **analog1},
-        "RPIPLC_50RRA": {**relay0, **relay1, **analog2},
-        "RPIPLC_53ARR": {**analog0, **relay1, **relay2},
-        "RPIPLC_54ARA": {**analog0, **relay1, **analog2},
-        "RPIPLC_57AAR": {**analog0, **analog1, **relay2},
-        "RPIPLC_57R": {**relay0, **relay1, **relay2},
-        "RPIPLC_58": {**analog0, **analog1, **analog2},
+	"RPIPLC_19R": {**relay0, **extras},
+        "RPIPLC_21": {**analog0, **extras},
+        "RPIPLC_38AR": {**analog0, **relay1, **extras},
+        "RPIPLC_38R": {**relay0, **relay1, **extras},
+        "RPIPLC_42": {**analog0, **analog1, **extras},
+        "RPIPLC_50RRA": {**relay0, **relay1, **analog2, **extras},
+        "RPIPLC_53ARR": {**analog0, **relay1, **relay2, **extras},
+        "RPIPLC_54ARA": {**analog0, **relay1, **analog2, **extras},
+        "RPIPLC_57AAR": {**analog0, **analog1, **relay2, **extras},
+        "RPIPLC_57R": {**relay0, **relay1, **relay2, **extras},
+        "RPIPLC_58": {**analog0, **analog1, **analog2, **extras},
 }

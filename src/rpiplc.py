@@ -16,7 +16,7 @@ class UnknownPLCConf(Exception):
 def init(version_name, model_name):
     global _hw
 
-    _rpiplc.initPins()
+    _rpiplc.initExpandedGPIO()
 
     if version_name == "RPIPLC_V5":
         from . models_v5 import hw
