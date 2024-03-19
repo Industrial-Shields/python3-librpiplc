@@ -3,3 +3,4 @@ dist/
 rpiplc_lib.egg-info/
 venv/
 /librpiplc.egg-info/
+/librpiplc/__pycache__/
