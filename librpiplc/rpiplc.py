@@ -16,7 +16,7 @@ class UnknownPLCConf(Exception):
 def init(version_name, model_name):
     global _hw
 
-    _rpiplc.initExpandedGPIO()
+    _rpiplc.initExpandedGPIO(False)
 
     if version_name == "RPIPLC_V5":
         from . models_v5 import hw
@@ -34,20 +34,27 @@ def init(version_name, model_name):
 
     _hw = hw[model_name]
 
-def analog_read(pin_name):
-    return _rpiplc.analogRead(_hw[pin_name])
+def deinit():
+     global _hw
 
-def analog_write(pin_name, value):
-    _rpiplc.analogWrite(_hw[pin_name], value)
+     _rpiplc.deinitExpandedGPIO()
 
-def delay(value):
-    _rpiplc.delay(value)
+     _hw = None
 
-def digital_read(pin_name):
-    return _rpiplc.digitalRead(_hw[pin_name])
+def pin_mode(pin_name, mode):
+    _rpiplc.pinMode(_hw[pin_name], mode)
 
 def digital_write(pin_name, value):
     _rpiplc.digitalWrite(_hw[pin_name], value)
 
-def pin_mode(pin_name, mode):
-    _rpiplc.pinMode(_hw[pin_name], mode)
+def digital_read(pin_name):
+    return _rpiplc.digitalRead(_hw[pin_name])
+
+def analog_write(pin_name, value):
+    _rpiplc.analogWrite(_hw[pin_name], value)
+
+def analog_read(pin_name):
+    return _rpiplc.analogRead(_hw[pin_name])
+
+def delay(value):
+    _rpiplc.delay(value)
