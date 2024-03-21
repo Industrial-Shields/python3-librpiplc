@@ -50,6 +50,9 @@ def digital_write(pin_name, value):
 def digital_read(pin_name):
     return _rpiplc.digitalRead(_hw[pin_name])
 
+def analog_write_set_frequency(pin_name, freq):
+     _rpiplc.analogWriteSetFrequency(_hw[pin_name], freq)
+
 def analog_write(pin_name, value):
     _rpiplc.analogWrite(_hw[pin_name], value)
 
