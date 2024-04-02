@@ -54,7 +54,10 @@ You can check the available versions in here: https://github.com/Industrial-Shie
 3. Go to the library directory and install the library with the following command:
 ```
 cd python3-librpiplc/
+# If you have Raspberry Bookwoorm or superior:
 sudo python -m pip install . --break-system-packages --root-user-action=ignore
+# Else
+sudo python -m pip install .
 ```
 
 
