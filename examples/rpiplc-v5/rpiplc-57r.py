@@ -43,7 +43,7 @@ def relay_test():
 
 
 def main():
-	rpiplc.init("RPIPLC_V4", "RPIPLC_57R")
+	rpiplc.init("RPIPLC_V5", "RPIPLC_57R")
 
 	analog_write_pwm()
 
@@ -53,7 +53,7 @@ def main():
 			analog_read_write()
 			relay_test()
 	except KeyboardInterrupt:
-                return 0;
+	        return 0;
 
 
 if __name__ == "__main__":
