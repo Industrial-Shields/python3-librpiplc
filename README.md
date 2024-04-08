@@ -86,6 +86,8 @@ analog_read(): rpiplc.analog_read(PIN_NAME) # It returns a 12-bit number that go
 analog_write(): rpiplc.analog_write(PIN_NAME, VALUE) # Where value is a 12-bit number that goes from 0 to 4095 (0 to 10V)
 
 delay(): rpiplc.delay(MS) # Where MS is the number of milliseconds to block the execution before continuing
+
+delay_microseconds(): rpiplc.delay_microseconds(US) # Where US is the number of microseconds to block the execution before continuing
 ```
 
 

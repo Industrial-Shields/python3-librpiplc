@@ -39,7 +39,7 @@ def relay_test():
 	rpiplc.digital_write("R0.1",rpiplc.HIGH)
 	rpiplc.delay(1000)
 	rpiplc.digital_write("R0.1",rpiplc.LOW)
-	rpiplc.delay(1000)
+        rpiplc.delay_microseconds(1000000)
 
 
 def main():

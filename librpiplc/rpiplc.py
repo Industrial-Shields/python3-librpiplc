@@ -13,6 +13,8 @@ class UnknownPLCConf(Exception):
      def __init__(self, message):
         super().__init__(message)
 
+# This function loads into memory the correct mapping of the version and model
+# you choose
 def init(version_name, model_name):
     global _hw
 
@@ -42,22 +44,25 @@ def deinit():
      _hw = None
 
 def pin_mode(pin_name, mode):
-    _rpiplc.pinMode(_hw[pin_name], mode)
+    return _rpiplc.pinMode(_hw[pin_name], mode)
 
 def digital_write(pin_name, value):
-    _rpiplc.digitalWrite(_hw[pin_name], value)
+    return _rpiplc.digitalWrite(_hw[pin_name], value)
 
 def digital_read(pin_name):
     return _rpiplc.digitalRead(_hw[pin_name])
 
 def analog_write_set_frequency(pin_name, freq):
-     _rpiplc.analogWriteSetFrequency(_hw[pin_name], freq)
+     return _rpiplc.analogWriteSetFrequency(_hw[pin_name], freq)
 
 def analog_write(pin_name, value):
-    _rpiplc.analogWrite(_hw[pin_name], value)
+    return _rpiplc.analogWrite(_hw[pin_name], value)
 
 def analog_read(pin_name):
     return _rpiplc.analogRead(_hw[pin_name])
 
 def delay(value):
     _rpiplc.delay(value)
+
+def delay_microseconds(value):
+    _rpiplc.delayMicroseconds(value)
