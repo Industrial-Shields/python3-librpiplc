@@ -1,11 +1,14 @@
 # python3-librpiplc
-
 ### by Industrial Shields
+
 **python3-librpiplc** provides a Python wrapper for the librpiplc C library, enabling Python applications to interface with the GPIOs of Raspberry Pi based Industrial Shields PLCs:
 * Analog reads and write
 * Digital reads and writes
 * Relay controlling
 
+
+## Licensing
+This library is licensed under the LGPL-3.0-or-later. The test programs are licensed under the GPL-3.0-or-later.
 
 
 ## Prerequisites
