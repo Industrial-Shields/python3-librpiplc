@@ -1,6 +1,5 @@
 build/
 dist/
-rpiplc_lib.egg-info/
 venv/
-/librpiplc.egg-info/
 /librpiplc/__pycache__/
+/python3_librpiplc.egg-info/
