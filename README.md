@@ -191,7 +191,7 @@ if __name__ == "__main__":
 ```
 RPIPLC_V3 (deprecated)
 RPIPLC_V4
-RPIPLC_V5
+RPIPLC_V6
 ```
 
 

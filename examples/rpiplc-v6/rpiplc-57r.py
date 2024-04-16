@@ -62,7 +62,7 @@ def relay_test():
 def main():
 	print(f"librpiplc version: {rpiplc.c_version}, python3-librpiplc version: {rpiplc.python_version}")
 
-	rpiplc.init("RPIPLC_V5", "RPIPLC_57R")
+	rpiplc.init("RPIPLC_V6", "RPIPLC_57R")
 
 	analog_write_pwm()
 
