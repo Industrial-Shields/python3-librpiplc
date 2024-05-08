@@ -41,10 +41,10 @@ class UnknownPLCConf(Exception):
 
 # This function loads into memory the correct mapping of the version and model
 # you choose
-def init(version_name, model_name):
+def init(version_name, model_name, restart=False):
     global _hw
 
-    _rpiplc.initExpandedGPIO(False)
+    _rpiplc.initExpandedGPIO(restart)
 
     if version_name == "RPIPLC_V6":
         from . models_v6 import hw
