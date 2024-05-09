@@ -178,9 +178,6 @@ relay2 = {
 }
 
 extras = {
-	"PWM3": 0x00004109,
-	"PWM2": 0x0000410A,
-	"PWM1": 0x0000410B,
 	"EXP1_RST": 0x0000410C,
 	"EXP2_RST": 0x0000410D,
         "PIN8": 8,
