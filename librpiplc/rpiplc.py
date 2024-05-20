@@ -26,7 +26,7 @@ c_version_patch = c_int.in_dll(_rpiplc, "LIB_RPIPLC_VERSION_PATCH_NUM").value
 c_version = c_char_p.in_dll(_rpiplc, "LIB_RPIPLC_VERSION").value.decode("utf-8")
 python_version_major = c_version_major
 python_version_minor = c_version_minor
-python_version_patch = 0
+python_version_patch = 1
 python_version = f"{python_version_major}.{python_version_minor}.{python_version_patch}"
 
 INPUT = 0
@@ -39,19 +39,22 @@ class UnknownPLCConf(Exception):
      def __init__(self, message):
         super().__init__(message)
 
-# This function loads into memory the correct mapping of the version and model
-# you choose
+# This function loads into memory the correct mapping of the version and model you choose
 def init(version_name, model_name, restart=False):
     global _hw
 
-    _rpiplc.initExpandedGPIO(restart)
+    rc = _rpiplc.initExpandedGPIO(restart)
+    if rc < 0:
+        return rc
 
     if version_name == "RPIPLC_V6":
-        from . models_v6 import hw
+        from .folder_rpiplc.models_v6 import hw
     elif version_name == "RPIPLC_V4":
-        from . models_v4 import hw
+        from .folder_rpiplc.models_v4 import hw
     elif version_name == "RPIPLC_V3":
-        from . models_v3 import hw
+        from .folder_rpiplc.models_v3 import hw
+    elif version_name == "UPSAFEPI_V6":
+        from .upsafepi.models_v6 import hw
     else:
         raise UnknownPLCConf(f"Unknown version {version_name}, the only available versions are RPIPLC_V6, RPIPLC_V4 and RPIPLC_V3")
 
@@ -62,12 +65,18 @@ def init(version_name, model_name, restart=False):
 
     _hw = hw[model_name]
 
+    return rc
+
 def deinit():
      global _hw
 
-     _rpiplc.deinitExpandedGPIO()
+     rc = _rpiplc.deinitExpandedGPIO()
+     if rc < 0:
+         return rc
 
      _hw = None
+
+     return rc
 
 def pin_mode(pin_name, mode):
     return _rpiplc.pinMode(_hw[pin_name], mode)
