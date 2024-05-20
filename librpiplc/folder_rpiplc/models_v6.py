@@ -186,6 +186,7 @@ extras = {
         "OPTO_OUT_1": 13,
         "OPTO_IN_2": 5,
         "OPTO_IN_1": 12,
+        "INT31": 4
 }
 
 hw = {
