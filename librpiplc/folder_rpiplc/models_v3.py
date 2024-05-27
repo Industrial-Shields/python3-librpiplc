@@ -176,6 +176,7 @@ relay2 = {
 }
 
 hw = {
+	"RPIPLC": {},
 	"RPIPLC_19R": {**relay0},
         "RPIPLC_21": {**analog0},
         "RPIPLC_38AR": {**analog0, **relay1},

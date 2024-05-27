@@ -187,6 +187,7 @@ extras = {
 }
 
 hw = {
+	"RPIPLC": {**extras},
 	"RPIPLC_19R": {**relay0, **extras},
         "RPIPLC_21": {**analog0, **extras},
         "RPIPLC_38AR": {**analog0, **relay1, **extras},
