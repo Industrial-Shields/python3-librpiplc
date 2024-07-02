@@ -19,8 +19,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from setuptools import find_packages, setup
 
-import subprocess
-rc = subprocess.call("./update_stub.sh")
 # Helper symlink to make sure not to import the library installed in the system
 from _setup_librpiplc import rpiplc
 
@@ -33,7 +31,5 @@ setup(
         description = "Industrial Shields librpiplc bindings for Python 3",
         author = "Industrial Shields",
         license = "LGPL-3.0-or-later",
-        classifier = ["License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)"],
-        package_data={'librpiplc': ['stub.so']},
-        include_package_data=True,
+        classifier = ["License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)"]
         )

@@ -18,19 +18,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from ctypes import cdll, c_int, c_char_p
-import os
 
-try:
-    _rpiplc = cdll.LoadLibrary("librpiplc.so")
-except:
-    _rpiplc = cdll.LoadLibrary(os.path.dirname(__file__) + '/./stub.so')
+_rpiplc = cdll.LoadLibrary("librpiplc.so")
 c_version_major = c_int.in_dll(_rpiplc, "LIB_RPIPLC_VERSION_MAJOR_NUM").value
 c_version_minor = c_int.in_dll(_rpiplc, "LIB_RPIPLC_VERSION_MINOR_NUM").value
 c_version_patch = c_int.in_dll(_rpiplc, "LIB_RPIPLC_VERSION_PATCH_NUM").value
 c_version = c_char_p.in_dll(_rpiplc, "LIB_RPIPLC_VERSION").value.decode("utf-8")
 python_version_major = c_version_major
 python_version_minor = c_version_minor
-python_version_patch = 0
+python_version_patch = 1
 python_version = f"{python_version_major}.{python_version_minor}.{python_version_patch}"
 
 INPUT = 0
