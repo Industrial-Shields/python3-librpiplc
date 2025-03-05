@@ -1,5 +1,5 @@
 """
-Copyright (c) 2024 Industrial Shields. All rights reserved
+Copyright (c) 2025 Industrial Shields. All rights reserved
 
 This file is part of python3-librpiplc.
 
@@ -16,10 +16,10 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-from .mapping import PLCMappingDict, make_pin_direct
+from .mapping import PLCMappingDict
 
 extras = {
-	"DE_RE": make_pin_direct(27)
+	"DE_RE": 27
 }
 
 hw = {

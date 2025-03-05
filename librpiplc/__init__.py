@@ -115,6 +115,8 @@ class RPIPLCClass:
         self.python_version = f"{self.python_version_major}" \
             f".{self.python_version_minor}.{self.python_version_patch}"
 
+        self._is_library_old = self.c_version_major == 3 and self.c_version_minor < 1
+
         self._c_prepare_arg_and_return_types()
 
     def __new__(cls) -> "RPIPLCClass":
@@ -131,9 +133,14 @@ class RPIPLCClass:
         functions in the C library to ensure proper interaction between
         Python and C.
         """
-        # int initExpandedGPIOV2(bool restart);
-        self._dyn_lib.initExpandedGPIOV2.argtypes = [ctypes.c_bool]
-        self._dyn_lib.initExpandedGPIOV2.restype = ctypes.c_int
+        if not self._is_library_old:
+            # int initExpandedGPIOV2(bool restart);
+            self._dyn_lib.initExpandedGPIOV2.argtypes = [ctypes.c_bool]
+            self._dyn_lib.initExpandedGPIOV2.restype = ctypes.c_int
+        else:
+            # int initExpandedGPIO(bool restart);
+            self._dyn_lib.initExpandedGPIO.argtypes = [ctypes.c_bool]
+            self._dyn_lib.initExpandedGPIO.restype = ctypes.c_int
 
         # int deinitExpandedGPIO(void);
         self._dyn_lib.deinitExpandedGPIO.argtypes = []
@@ -251,6 +258,8 @@ class RPIPLCClass:
         hw = {}
         try:
             module_name = available_versions[version_name]
+            if self._is_library_old:
+                module_name = f"old_{module_name}"
             hw = __import__(f"librpiplc.{module_name}", fromlist=["hw"]).hw
         except KeyError as exc:
             pretty_versions = "\n" + '\n'.join(hw.keys())
@@ -266,8 +275,11 @@ class RPIPLCClass:
                 f"for {version_name} are:{pretty_models}"
             raise UnknownPLCConf(error_str) from exc
 
-        self._c_populate_arrays(version_name, model_name)
-        rc = int(self._dyn_lib.initExpandedGPIOV2(restart))
+        if not self._is_library_old:
+            self._c_populate_arrays(version_name, model_name)
+            rc = int(self._dyn_lib.initExpandedGPIOV2(restart))
+        else:
+            rc = int(self._dyn_lib.initExpandedGPIO(restart))
         self._is_initialized = rc in (0, 1)
         return rc
 
