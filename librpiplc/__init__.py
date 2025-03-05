@@ -25,7 +25,23 @@ from .mapping import PLCMappingDict
 
 
 
-class C_Peripherals(ctypes.Structure):
+class CPeripherals(ctypes.Structure):
+    """
+    C structure to hold peripheral information for the RPIPLC library.
+
+    Attributes:
+        arrayMCP23008 (ctypes.POINTER(ctypes.c_uint8)): Pointer to an array of MCP23008 addresses.
+        numArrayMCP23008 (ctypes.c_size_t): Number of MCP23008 addresses.
+        arrayADS1015 (ctypes.POINTER(ctypes.c_uint8)): Pointer to an array of ADS1015 addresses.
+        numArrayADS1015 (ctypes.c_size_t): Number of ADS1015 addresses.
+        arrayPCA9685 (ctypes.POINTER(ctypes.c_uint8)): Pointer to an array of PCA9685 addresses.
+        numArrayPCA9685 (ctypes.c_size_t): Number of PCA9685 addresses.
+        arrayLTC2309 (ctypes.POINTER(ctypes.c_uint8)): Pointer to an array of LTC2309 addresses.
+        numArrayLTC2309 (ctypes.c_size_t): Number of LTC2309 addresses.
+        arrayMCP23017 (ctypes.POINTER(ctypes.c_uint8)): Pointer to an array of MCP23017 addresses.
+        numArrayMCP23017 (ctypes.c_size_t): Number of MCP23017 addresses.
+    """
+    # pylint: disable=too-few-public-methods
     _fields_ = [
         ("arrayMCP23008", ctypes.POINTER(ctypes.c_uint8)),
         ("numArrayMCP23008", ctypes.c_size_t),
@@ -41,12 +57,31 @@ class C_Peripherals(ctypes.Structure):
 
 
 class RPIPLCClass:
+    """
+    Class to manage Raspberry Pi PLC operations.
+
+    This class provides methods to directly interface with the C library.
+
+    Attributes:
+        INPUT (PinType): Constant for input pin mode.
+        OUTPUT (PinType): Constant for output pin mode.
+        LOW (DigitalLevel): Constant for low digital level.
+        HIGH (DigitalLevel): Constant for high digital level.
+    """
+    # pylint: disable=too-many-instance-attributes
     INPUT = PinType.INPUT
     OUTPUT = PinType.OUTPUT
     LOW = DigitalLevel.LOW
     HIGH = DigitalLevel.HIGH
 
     def __init__(self) -> None:
+        """
+        Initialize the RPIPLCClass instance and loads the C library into memory. If some symbol is
+        undefined, it will raise UnknownPLCConf.
+
+        Raises:
+            UnknownPLCConf: If the C library version is incompatible.
+        """
         self._mapping = PLCMappingDict({})
         self._is_initialized = False
         self._dyn_lib = ctypes.cdll.LoadLibrary("librpiplc.so")
@@ -82,14 +117,20 @@ class RPIPLCClass:
 
         self._c_prepare_arg_and_return_types()
 
-
-    # Make it a singleton
     def __new__(cls) -> "RPIPLCClass":
+        """
+        Override method to make the class a singleton.
+        """
         if not hasattr(cls, 'instance'):
             cls.instance = super(RPIPLCClass, cls).__new__(cls)
         return cls.instance
 
     def _c_prepare_arg_and_return_types(self) -> None:
+        """
+        This method sets the argument types and return types for various
+        functions in the C library to ensure proper interaction between
+        Python and C.
+        """
         # int initExpandedGPIOV2(bool restart);
         self._dyn_lib.initExpandedGPIOV2.argtypes = [ctypes.c_bool]
         self._dyn_lib.initExpandedGPIOV2.restype = ctypes.c_int
@@ -136,7 +177,14 @@ class RPIPLCClass:
 
 
     def _c_populate_arrays(self, version_name: str, model_name: str) -> None:
-        _c_struct = C_Peripherals.in_dll(self._dyn_lib, "_peripherals_struct")
+        """
+        Populate the library's peripheral arrays based on the version and model.
+
+        Args:
+            version_name (str): The version name of the PLC.
+            model_name (str): The model name of the PLC.
+        """
+        _c_struct = CPeripherals.in_dll(self._dyn_lib, "_peripherals_struct")
 
         if version_name in ["RPIPLC_V3", "RPIPLC_V4", "RPIPLC_V6"]:
             mcp23008_array = (ctypes.c_uint8 * 2)(0x20, 0x21)
@@ -178,6 +226,21 @@ class RPIPLCClass:
 
 
     def init(self, version_name: str, model_name: str, restart: bool = False) -> int:
+        """
+        Initialize the RPIPLC library with the specified version and model.
+
+        Args:
+            version_name (str): The version name of the PLC.
+            model_name (str): The model name of the PLC.
+            restart (bool): Whether to restart the peripherals or not (default is False).
+
+        Returns:
+            int: Return code from the initialization function (0 for success, 1 if it was
+                 already initialized, others for failure).
+
+        Raises:
+            UnknownPLCConf: If the version or model is unknown.
+        """
         available_versions = {
             "RPIPLC_V6": "rpiplc_mapping_v6",
             "RPIPLC_V4": "rpiplc_mapping_v4",
@@ -209,6 +272,15 @@ class RPIPLCClass:
         return rc
 
     def deinit(self) -> int:
+        """
+        Deinitialize the RPIPLC library.
+
+        This method cleans up the library and resets the internal state.
+
+        Returns:
+            int: Return code from the deinitialization function (0 for success, 1 if it was already
+                 deinitialized, others for failure).
+        """
         rc = int(self._dyn_lib.deinitExpandedGPIO())
         if rc < 0:
             return rc
@@ -220,27 +292,98 @@ class RPIPLCClass:
 
 
     def pin_mode(self, pin_name: str, mode: PinType) -> int:
+        """
+        Set the mode of a specified pin.
+
+        Args:
+            pin_name (str): The name of the pin to set.
+            mode (PinType): The mode to set for the pin (rpiplc.INPUT or rpiplc.OUTPUT).
+
+        Returns:
+            int: Return code from the pinMode function (0 for success, non-zero for failure).
+        """
         return int(self._dyn_lib.pinMode(self._mapping[pin_name], mode.value))
 
     def digital_write(self, pin_name: str, level: DigitalLevel) -> int:
+        """
+        Write a digital value to a specified pin.
+
+        Args:
+            pin_name (str): The name of the pin to write to.
+            level (DigitalLevel): The digital level to write (LOW or HIGH).
+
+        Returns:
+            int: Return code from the digitalWrite function (0 for success, non-zero for failure).
+        """
         return int(self._dyn_lib.digitalWrite(self._mapping[pin_name], level.value))
 
     def digital_read(self, pin_name: str) -> int:
+        """
+        Read a digital value from a specified pin.
+
+        Args:
+            pin_name (str): The name of the pin to read from.
+
+        Returns:
+            int: The digital value read from the pin (0 or 1).
+        """
         return int(self._dyn_lib.digitalRead(self._mapping[pin_name]))
 
     def analog_write_set_frequency(self, pin_name: str, freq: int) -> int:
+        """
+        Set the frequency for PWM on a specified pin.
+
+        Args:
+            pin_name (str): The name of the pin to set the frequency for.
+            freq (int): The desired frequency in Hz.
+
+        Returns:
+            int: Return code from the analogWriteSetFrequency function (0 for success, non-zero for
+                 failure).
+        """
         return int(self._dyn_lib.analogWriteSetFrequency(self._mapping[pin_name], freq))
 
     def analog_write(self, pin_name: str, value: int) -> int:
+        """
+        Write an analog value to a specified pin.
+
+        Args:
+            pin_name (str): The name of the pin to write to.
+            value (int): The analog value to write (it's normally a number between 0 and 4095).
+
+        Returns:
+            int: Return code from the analogWrite function (0 for success, non-zero for failure).
+        """
         return int(self._dyn_lib.analogWrite(self._mapping[pin_name], value))
 
     def analog_read(self, pin_name: str) -> int:
+        """
+        Read an analog value from a specified pin.
+
+        Args:
+            pin_name (str): The name of the pin to read from.
+
+        Returns:
+            int: The analog value read from the pin (it's normally a number between 0 and 4095).
+        """
         return int(self._dyn_lib.analogRead(self._mapping[pin_name]))
 
     def delay(self, value: int) -> None:
+        """
+        Pause execution for a specified number of milliseconds.
+
+        Args:
+            value (int): The number of milliseconds to delay.
+        """
         self._dyn_lib.delay(value)
 
     def delay_microseconds(self, value: int) -> None:
+        """
+        Pause execution for a specified number of microseconds.
+
+        Args:
+            value (int): The number of microseconds to delay.
+        """
         self._dyn_lib.delayMicroseconds(value)
 
 

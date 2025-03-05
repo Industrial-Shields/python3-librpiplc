@@ -17,10 +17,12 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 from enum import Enum
-from .exceptions import UnknownPin
 
 
 class PeripheralType(Enum):
+    """
+    Enum representing different types of peripherals that can be connected.
+    """
     PLC_DIRECT = 0
     PLC_PCA9685 = 1
     PLC_MCP23008 = 2
@@ -29,9 +31,15 @@ class PeripheralType(Enum):
     PLC_ADS1015 = 5
 
 class PinType(Enum):
+    """
+    Enum representing the type of pin configuration.
+    """
     INPUT = 0
     OUTPUT = 1
 
 class DigitalLevel(Enum):
+    """
+    Enum representing the digital levels for pins.
+    """
     LOW = 0
     HIGH = 1

@@ -16,7 +16,8 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-from .mapping import PLCMappingDict, make_pin_direct, make_pin_mcp23008, make_pin_ads1015, make_pin_pca9685
+from .mapping import PLCMappingDict, make_pin_direct, make_pin_mcp23008, make_pin_ads1015, \
+    make_pin_pca9685
 
 analog0 = {
 	"I0.0": make_pin_mcp23008(0x21, 0x05),
