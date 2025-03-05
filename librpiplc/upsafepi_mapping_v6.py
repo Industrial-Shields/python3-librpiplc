@@ -16,3 +16,12 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+from .mapping import make_pin_direct
+
+extras = {
+	"DE_RE": make_pin_direct(27)
+}
+
+hw = {
+	"UPSAFEPI": {**extras}
+}
