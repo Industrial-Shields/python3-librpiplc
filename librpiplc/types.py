@@ -16,17 +16,21 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-class UnknownPLCConf(Exception):
-    """
-    Exception raised for invalid PLC configuration parameters.
-    """
-    def __init__(self, message: str) -> None:
-        super().__init__(message)
+from enum import Enum
 
 
-class UnknownPin(KeyError):
-    """
-    Exception raised for unknown pins in a dictionary.
-    """
-    def __init__(self, key: str) -> None:
-        super().__init__(f"Unknown pin: '{key}'")
+class PeripheralType(Enum):
+    PLC_DIRECT = 0
+    PLC_PCA9685 = 1
+    PLC_MCP23008 = 2
+    PLC_MCP23017 = 3
+    PLC_LTC2309 = 4
+    PLC_ADS1015 = 5
+
+class PinType(Enum):
+    INPUT = 0
+    OUTPUT = 1
+
+class DigitalLevel(Enum):
+    LOW = 0
+    HIGH = 1

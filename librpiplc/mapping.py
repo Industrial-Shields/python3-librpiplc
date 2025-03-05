@@ -17,46 +17,40 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 from enum import Enum
+from typing import Any, Dict
 from .exceptions import UnknownPin
+from .types import PeripheralType
 
 
-class MappingDict(dict):
-    def __getitem__(self, key):
+
+class MappingDict(dict): # type: ignore
+    def __getitem__(self, key: Any) -> Any:
         try:
             return super().__getitem__(key)
-        except KeyError:
-            raise UnknownPin(key)
+        except KeyError as exc:
+            raise UnknownPin(key) from exc
 
 
-
-class PeripheralType(Enum):
-    PLC_DIRECT = 0
-    PLC_PCA9685 = 1
-    PLC_MCP23008 = 2
-    PLC_MCP23017 = 3
-    PLC_LTC2309 = 4
-    PLC_ADS1015 = 5
-
-def _make_pin_plc(peripheral_type, byte2, byte3, byte4):
+def _make_pin_plc(peripheral_type: PeripheralType, byte2: int, byte3: int, byte4: int) -> int:
     return ((peripheral_type.value & 0xFF) << 24) | \
         ((byte2 & 0xFF) << 16) | \
         ((byte3 & 0xFF) << 8) | \
         (byte4 & 0xFF)
 
-def make_pin_direct(index):
+def make_pin_direct(index: int) -> int:
     return _make_pin_plc(PeripheralType.PLC_DIRECT, (index & 0xFF0000) >> 16, (index & 0xFF00) >> 8, index)
 
-def make_pin_pca9685(addr, index):
+def make_pin_pca9685(addr: int, index: int) -> int:
     return _make_pin_plc(PeripheralType.PLC_PCA9685, addr, 0x00, index)
 
-def make_pin_mcp23008(addr, index):
+def make_pin_mcp23008(addr: int, index: int) -> int:
     return _make_pin_plc(PeripheralType.PLC_MCP23008, addr, 0x00, index)
 
-def make_pin_mcp23017(addr, index):
+def make_pin_mcp23017(addr: int, index: int) -> int:
     return _make_pin_plc(PeripheralType.PLC_MCP23017, addr, 0x00, index)
 
-def make_pin_ltc2309(addr, index):
+def make_pin_ltc2309(addr: int, index: int) -> int:
     return _make_pin_plc(PeripheralType.PLC_LTC2309, addr, 0x00, index)
 
-def make_pin_ads1015(addr, index):
+def make_pin_ads1015(addr: int, index: int) -> int:
     return _make_pin_plc(PeripheralType.PLC_ADS1015, addr, 0x00, index)
