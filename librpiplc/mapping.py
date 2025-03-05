@@ -16,19 +16,19 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-from enum import Enum
-from typing import Any, Dict
+from typing import Dict
 from .exceptions import UnknownPin
-from .types import PeripheralType
+from .lib_types import PeripheralType
 
 
 
-class MappingDict(dict): # type: ignore
-    def __getitem__(self, key: Any) -> Any:
+class PLCMappingDict(Dict[str, int]):
+    def __getitem__(self, key: str) -> int:
         try:
-            return super().__getitem__(key)
-        except KeyError as exc:
-            raise UnknownPin(key) from exc
+            return int(super().__getitem__(key))
+        except KeyError:
+            pass
+        raise UnknownPin(key)
 
 
 def _make_pin_plc(peripheral_type: PeripheralType, byte2: int, byte3: int, byte4: int) -> int:

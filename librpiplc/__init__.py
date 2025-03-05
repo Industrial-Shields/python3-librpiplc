@@ -19,8 +19,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import ctypes
 from enum import Enum
 from typing import Optional
-from .types import DigitalLevel, PeripheralType, PinType
+from .lib_types import DigitalLevel, PeripheralType, PinType
 from .exceptions import UnknownPLCConf
+from .mapping import PLCMappingDict
 
 
 
@@ -46,7 +47,7 @@ class RPIPLCClass:
     HIGH = DigitalLevel.HIGH
 
     def __init__(self) -> None:
-        self._mapping = {}
+        self._mapping = PLCMappingDict({})
         self._is_initialized = False
         self._dyn_lib = ctypes.cdll.LoadLibrary("librpiplc.so")
 
@@ -212,13 +213,13 @@ class RPIPLCClass:
         if rc < 0:
             return rc
 
-        self._mapping = {}
+        self._mapping = PLCMappingDict({})
         self._is_initialized = False
 
         return rc
 
 
-    def pin_mode(self, pin_name: str, mode: PinType) -> int: #type no-any-return
+    def pin_mode(self, pin_name: str, mode: PinType) -> int:
         return int(self._dyn_lib.pinMode(self._mapping[pin_name], mode.value))
 
     def digital_write(self, pin_name: str, level: DigitalLevel) -> int:

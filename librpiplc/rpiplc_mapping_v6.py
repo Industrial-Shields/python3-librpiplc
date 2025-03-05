@@ -16,7 +16,7 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-from .mapping import make_pin_direct, make_pin_mcp23008, make_pin_ltc2309, make_pin_pca9685
+from .mapping import PLCMappingDict, make_pin_direct, make_pin_mcp23008, make_pin_ltc2309, make_pin_pca9685
 
 analog0 = {
 	"I0.0": make_pin_mcp23008(0x20, 0x04),
@@ -191,16 +191,16 @@ extras = {
 }
 
 hw = {
-    	"RPIPLC": {**extras},
-	"RPIPLC_19R": {**relay0, **extras},
-        "RPIPLC_21": {**analog0, **extras},
-        "RPIPLC_38AR": {**analog0, **relay1, **extras},
-        "RPIPLC_38R": {**relay0, **relay1, **extras},
-        "RPIPLC_42": {**analog0, **analog1, **extras},
-        "RPIPLC_50RRA": {**relay0, **relay1, **analog2, **extras},
-        "RPIPLC_53ARR": {**analog0, **relay1, **relay2, **extras},
-        "RPIPLC_54ARA": {**analog0, **relay1, **analog2, **extras},
-        "RPIPLC_57AAR": {**analog0, **analog1, **relay2, **extras},
-        "RPIPLC_57R": {**relay0, **relay1, **relay2, **extras},
-        "RPIPLC_58": {**analog0, **analog1, **analog2, **extras},
+    	"RPIPLC": PLCMappingDict({**extras}),
+	"RPIPLC_19R": PLCMappingDict({**relay0, **extras}),
+        "RPIPLC_21": PLCMappingDict({**analog0, **extras}),
+        "RPIPLC_38AR": PLCMappingDict({**analog0, **relay1, **extras}),
+        "RPIPLC_38R": PLCMappingDict({**relay0, **relay1, **extras}),
+        "RPIPLC_42": PLCMappingDict({**analog0, **analog1, **extras}),
+        "RPIPLC_50RRA": PLCMappingDict({**relay0, **relay1, **analog2, **extras}),
+        "RPIPLC_53ARR": PLCMappingDict({**analog0, **relay1, **relay2, **extras}),
+        "RPIPLC_54ARA": PLCMappingDict({**analog0, **relay1, **analog2, **extras}),
+        "RPIPLC_57AAR": PLCMappingDict({**analog0, **analog1, **relay2, **extras}),
+        "RPIPLC_57R": PLCMappingDict({**relay0, **relay1, **relay2, **extras}),
+        "RPIPLC_58": PLCMappingDict({**analog0, **analog1, **analog2, **extras}),
 }
