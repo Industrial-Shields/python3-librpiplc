@@ -18,7 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 import ctypes
 from enum import Enum
-from typing import Optional
+from typing import Optional, Union
+import warnings
 from .lib_types import DigitalLevel, PeripheralType, PinType
 from .exceptions import UnknownPLCConf
 from .mapping import PLCMappingDict
@@ -317,7 +318,7 @@ class RPIPLCClass:
         """
         return int(self._dyn_lib.pinMode(self._mapping[pin_name], mode.value))
 
-    def digital_write(self, pin_name: str, level: DigitalLevel) -> int:
+    def digital_write(self, pin_name: str, level: Union[DigitalLevel, int, bool]) -> int:
         """
         Write a digital value to a specified pin.
 
@@ -328,6 +329,16 @@ class RPIPLCClass:
         Returns:
             int: Return code from the digitalWrite function (0 for success, non-zero for failure).
         """
+        if isinstance(level, int):
+            warnings.warn(
+                "Passing an int to digital_write is not recommended, use HIGH, LOW, booleans, or " \
+                "the DigitalLevel enum. The usage of int will be removed in future versions.",
+                category=DeprecationWarning,
+                stacklevel=2
+            )
+            level = self.HIGH if level > 0 else self.LOW
+        elif isinstance(level, bool):
+            level = self.HIGH if level else self.LOW
         return int(self._dyn_lib.digitalWrite(self._mapping[pin_name], level.value))
 
     def digital_read(self, pin_name: str) -> int:
