@@ -120,7 +120,7 @@ class RPIPLCClass:
 
         self._c_prepare_arg_and_return_types()
 
-        self._c_struct = None
+        self._c_struct: Optional[CPeripherals] = None
 
     def __new__(cls) -> "RPIPLCClass":
         """
