@@ -150,6 +150,11 @@ class RPIPLCClass:
         self._dyn_lib.deinitExpandedGPIO.argtypes = []
         self._dyn_lib.deinitExpandedGPIO.restype = ctypes.c_int
 
+        if not self._is_library_old:
+            # int deinitExpandedGPIONoReset(void);
+            self._dyn_lib.deinitExpandedGPIO.argtypes = []
+            self._dyn_lib.deinitExpandedGPIO.restype = ctypes.c_int
+
         # int pinMode(uint32_t pin, uint8_t mode);
         self._dyn_lib.pinMode.argtypes = [ctypes.c_uint32, ctypes.c_uint8]
         self._dyn_lib.pinMode.restype = ctypes.c_int
@@ -289,7 +294,11 @@ class RPIPLCClass:
 
 
     @contextmanager
-    def with_init(self, version_name: str, model_name: str, restart: bool = False) -> Generator[int, None, None]:
+    def with_init(self,
+                  version_name: str,
+                  model_name: str,
+                  restart: bool = False,
+                  restart_when_closing: bool = True) -> Generator[int, None, None]:
         """
         Context manager to initialize the rpiplc singleton with "with" statements.
 
@@ -305,7 +314,7 @@ class RPIPLCClass:
         yield rc
         self.deinit()
 
-    def deinit(self) -> int:
+    def deinit(self, restart: bool = True) -> int:
         """
         Deinitialize the RPIPLC library.
 
@@ -314,8 +323,19 @@ class RPIPLCClass:
         Returns:
             int: Return code from the deinitialization function (0 for success, 1 if it was already
                  deinitialized, others for failure).
+        Raises:
+            UnknownPLCConf: If the library version doesn't support not restarting when calling deinit
         """
-        rc = int(self._dyn_lib.deinitExpandedGPIO())
+        if not self._is_library_old:
+            if restart:
+                rc = int(self._dyn_lib.deinitExpandedGPIO())
+            else:
+                rc = int(self._dyn_lib.deinitExpandedGPIONoReset())
+        else:
+            if not restart:
+                raise UnknownPLCConf("This library version doesn't support de-initializing without restarting")
+            rc = int(self._dyn_lib.deinitExpandedGPIO())
+
         if rc in (0, 2):
             self._mapping = PLCMappingDict({})
             self._is_initialized = False
