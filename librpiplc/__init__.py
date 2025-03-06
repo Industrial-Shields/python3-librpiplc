@@ -119,6 +119,8 @@ class RPIPLCClass:
 
         self._c_prepare_arg_and_return_types()
 
+        self._c_struct = None
+
     def __new__(cls) -> "RPIPLCClass":
         """
         Override method to make the class a singleton.
@@ -191,30 +193,30 @@ class RPIPLCClass:
             version_name (str): The version name of the PLC.
             model_name (str): The model name of the PLC.
         """
-        _c_struct = CPeripherals.in_dll(self._dyn_lib, "_peripherals_struct")
+        self._c_struct = CPeripherals.in_dll(self._dyn_lib, "_peripherals_struct")
 
         if version_name in ["RPIPLC_V3", "RPIPLC_V4", "RPIPLC_V6"]:
             mcp23008_array = (ctypes.c_uint8 * 2)(0x20, 0x21)
         else:
             mcp23008_array = (ctypes.c_uint8 * 0)()
-        _c_struct.arrayMCP23008 = mcp23008_array
-        _c_struct.numArrayMCP23008 = len(mcp23008_array)
+        self._c_struct.arrayMCP23008 = mcp23008_array
+        self._c_struct.numArrayMCP23008 = len(mcp23008_array)
 
         # Populate arrayADS1015
         if version_name == "RPIPLC_V3":
             ads1015_array = (ctypes.c_uint8 * 4)(0x48, 0x49, 0x4A, 0x4B)
         else:
             ads1015_array = (ctypes.c_uint8 * 0)()
-        _c_struct.arrayADS1015 = ads1015_array
-        _c_struct.numArrayADS1015 = len(ads1015_array)
+        self._c_struct.arrayADS1015 = ads1015_array
+        self._c_struct.numArrayADS1015 = len(ads1015_array)
 
         # Populate arrayPCA9685
         if version_name in ["RPIPLC_V3", "RPIPLC_V4", "RPIPLC_V6"]:
             pca9685_array = (ctypes.c_uint8 * 2)(0x40, 0x41)
         else:
             pca9685_array = (ctypes.c_uint8 * 0)()
-        _c_struct.arrayPCA9685 = pca9685_array
-        _c_struct.numArrayPCA9685 = len(pca9685_array)
+        self._c_struct.arrayPCA9685 = pca9685_array
+        self._c_struct.numArrayPCA9685 = len(pca9685_array)
 
         # Populate arrayLTC2309
         if version_name in ["RPIPLC_V4", "RPIPLC_V6"]:
@@ -224,12 +226,12 @@ class RPIPLCClass:
                 ltc2309_array = (ctypes.c_uint8 * 3)(0x08, 0x0A, 0x28)
         else:
             ltc2309_array = (ctypes.c_uint8 * 0)()
-        _c_struct.arrayLTC2309 = ltc2309_array
-        _c_struct.numArrayLTC2309 = len(ltc2309_array)
+        self._c_struct.arrayLTC2309 = ltc2309_array
+        self._c_struct.numArrayLTC2309 = len(ltc2309_array)
 
         mcp23017_array = (ctypes.c_uint8 * 0)()
-        _c_struct.arrayMCP23017 = mcp23017_array
-        _c_struct.numArrayMCP23017 = len(mcp23017_array)
+        self._c_struct.arrayMCP23017 = mcp23017_array
+        self._c_struct.numArrayMCP23017 = len(mcp23017_array)
 
 
     def init(self, version_name: str, model_name: str, restart: bool = False) -> int:
@@ -297,6 +299,7 @@ class RPIPLCClass:
         if rc in (0, 2):
             self._mapping = PLCMappingDict({})
             self._is_initialized = False
+            self._c_struct = None
 
         return rc
 
