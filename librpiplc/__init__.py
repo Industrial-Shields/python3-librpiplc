@@ -294,11 +294,9 @@ class RPIPLCClass:
                  deinitialized, others for failure).
         """
         rc = int(self._dyn_lib.deinitExpandedGPIO())
-        if rc < 0:
-            return rc
-
-        self._mapping = PLCMappingDict({})
-        self._is_initialized = False
+        if rc in (0, 2):
+            self._mapping = PLCMappingDict({})
+            self._is_initialized = False
 
         return rc
 
