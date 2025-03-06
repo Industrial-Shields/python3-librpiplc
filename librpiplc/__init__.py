@@ -16,9 +16,10 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+from contextlib import contextmanager
 import ctypes
 from enum import Enum
-from typing import Optional, Union
+from typing import Generator, Optional, Union
 import warnings
 from .lib_types import DigitalLevel, PeripheralType, PinType
 from .exceptions import UnknownPLCConf
@@ -285,6 +286,24 @@ class RPIPLCClass:
             rc = int(self._dyn_lib.initExpandedGPIO(restart))
         self._is_initialized = rc in (0, 1)
         return rc
+
+
+    @contextmanager
+    def with_init(self, version_name: str, model_name: str, restart: bool = False) -> Generator[int, None, None]:
+        """
+        Context manager to initialize the rpiplc singleton with "with" statements.
+
+        Args:
+            version_name (str): The version name of the PLC.
+            model_name (str): The model name of the PLC.
+            restart (bool): Whether to restart the peripherals or not (default is False).
+
+        Raises:
+            UnknownPLCConf: If the version or model is unknown.
+        """
+        rc = self.init(version_name, model_name, restart)
+        yield rc
+        self.deinit()
 
     def deinit(self) -> int:
         """
