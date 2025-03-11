@@ -112,12 +112,12 @@ class RPIPLCClass:
             raise UnknownPLCConf(incompatible_msg) from exc
 
         self.python_version_major = self.c_version_major
-        self.python_version_minor = self.c_version_minor
+        self.python_version_minor = 0
         self.python_version_patch = 0
         self.python_version = f"{self.python_version_major}" \
             f".{self.python_version_minor}.{self.python_version_patch}"
 
-        self._is_library_old = self.c_version_major == 3 and self.c_version_minor < 1
+        self._is_library_old = self.c_version_major < 4
 
         self._c_prepare_arg_and_return_types()
 

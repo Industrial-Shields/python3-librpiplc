@@ -18,12 +18,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 from setuptools import find_packages, setup
-
+from pathlib import Path
+import sys
+sys.path.append(str(Path(__file__).parent))
+from librpiplc import rpiplc
 
 
 setup(
         name = "python3-librpiplc",
-        version = "3.1.0",
+        version = rpiplc.python_version,
         packages = find_packages(include = ["librpiplc"]),
         description = "Industrial Shields librpiplc bindings for Python 3",
         author = "Industrial Shields",
