@@ -111,8 +111,8 @@ class RPIPLCClass:
         except ValueError as exc:
             raise UnknownPLCConf(incompatible_msg) from exc
 
-        self.python_version_major = self.c_version_major
-        self.python_version_minor = 0
+        self.python_version_major = 3
+        self.python_version_minor = 1
         self.python_version_patch = 0
         self.python_version = f"{self.python_version_major}" \
             f".{self.python_version_minor}.{self.python_version_patch}"
