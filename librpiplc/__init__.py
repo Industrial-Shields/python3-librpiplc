@@ -152,8 +152,8 @@ class RPIPLCClass:
 
         if not self._is_library_old:
             # int deinitExpandedGPIONoReset(void);
-            self._dyn_lib.deinitExpandedGPIO.argtypes = []
-            self._dyn_lib.deinitExpandedGPIO.restype = ctypes.c_int
+            self._dyn_lib.deinitExpandedGPIONoReset.argtypes = []
+            self._dyn_lib.deinitExpandedGPIONoReset.restype = ctypes.c_int
 
         # int pinMode(uint32_t pin, uint8_t mode);
         self._dyn_lib.pinMode.argtypes = [ctypes.c_uint32, ctypes.c_uint8]
@@ -227,7 +227,7 @@ class RPIPLCClass:
 
         # Populate arrayLTC2309
         if version_name in ["RPIPLC_V4", "RPIPLC_V6"]:
-            if model_name in ["RPIPLC_21", "RPIPLC_19R"]:
+            if model_name in ["RPIPLC_21", "RPIPLC_19R", "RPIPLC"]:
                 ltc2309_array = (ctypes.c_uint8 * 2)(0x08, 0x0A)
             else:
                 ltc2309_array = (ctypes.c_uint8 * 3)(0x08, 0x0A, 0x28)
