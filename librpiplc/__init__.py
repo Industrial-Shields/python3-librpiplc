@@ -16,15 +16,14 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+
 from contextlib import contextmanager
 import ctypes
-from enum import Enum
 from typing import Generator, Optional, Union
 import warnings
-from .lib_types import DigitalLevel, PeripheralType, PinType
+from .lib_types import DigitalLevel, PinType
 from .exceptions import UnknownPLCConf
 from .mapping import PLCMappingDict
-
 
 
 class CPeripherals(ctypes.Structure):
@@ -70,11 +69,20 @@ class RPIPLCClass:
         LOW (DigitalLevel): Constant for low digital level.
         HIGH (DigitalLevel): Constant for high digital level.
     """
+
     # pylint: disable=too-many-instance-attributes
     INPUT = PinType.INPUT
     OUTPUT = PinType.OUTPUT
     LOW = DigitalLevel.LOW
     HIGH = DigitalLevel.HIGH
+
+    @staticmethod
+    def _try_load_library(libname: str) -> Optional[ctypes.CDLL]:
+        try:
+            return ctypes.cdll.LoadLibrary(libname)
+        except OSError:
+            pass
+        return None
 
     def __init__(self) -> None:
         """
@@ -86,7 +94,15 @@ class RPIPLCClass:
         """
         self._mapping = PLCMappingDict({})
         self._is_initialized = False
-        self._dyn_lib = ctypes.cdll.LoadLibrary("librpiplc.so")
+        self._dyn_lib: ctypes.CDLL = None  # type: ignore[assignment]
+        for libname in ["librpiplc.so", "/usr/local/lib/librpiplc.so", "/usr/lib/librpiplc.so"]:
+            dyn_lib = RPIPLCClass._try_load_library(libname)
+            if dyn_lib is not None:
+                self._dyn_lib = dyn_lib
+                break
+
+        if self._dyn_lib is None:
+            raise OSError("librpiplc is not installed in this system")
 
         incompatible_msg = "The librpiplc C library is not compatible with this Python library"
 
