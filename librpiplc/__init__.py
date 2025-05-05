@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from contextlib import contextmanager
 import ctypes
+from ctypes.util import find_library
 from typing import Generator, Optional, Union
 import warnings
 from .lib_types import DigitalLevel, PinType
@@ -76,14 +77,6 @@ class RPIPLCClass:
     LOW = DigitalLevel.LOW
     HIGH = DigitalLevel.HIGH
 
-    @staticmethod
-    def _try_load_library(libname: str) -> Optional[ctypes.CDLL]:
-        try:
-            return ctypes.cdll.LoadLibrary(libname)
-        except OSError:
-            pass
-        return None
-
     def __init__(self) -> None:
         """
         Initialize the RPIPLCClass instance and loads the C library into memory. If some symbol is
@@ -94,14 +87,10 @@ class RPIPLCClass:
         """
         self._mapping = PLCMappingDict({})
         self._is_initialized = False
-        self._dyn_lib: ctypes.CDLL = None  # type: ignore[assignment]
-        for libname in ["librpiplc.so", "/usr/local/lib/librpiplc.so", "/usr/lib/librpiplc.so"]:
-            dyn_lib = RPIPLCClass._try_load_library(libname)
-            if dyn_lib is not None:
-                self._dyn_lib = dyn_lib
-                break
-
-        if self._dyn_lib is None:
+        libname = find_library("rpiplc")
+        if libname != "":
+            self._dyn_lib: ctypes.CDLL = ctypes.cdll.LoadLibrary(libname)
+        else:
             raise OSError("librpiplc is not installed in this system")
 
         incompatible_msg = "The librpiplc C library is not compatible with this Python library"
