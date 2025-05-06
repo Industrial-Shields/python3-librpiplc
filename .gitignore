@@ -3,3 +3,12 @@ dist/
 venv/
 /librpiplc/__pycache__/
 /python3_librpiplc.egg-info/
+/.pybuild/
+/debian/tmp
+/debian/.debhelper
+/debian/python3-librpiplc/
+/debian/*.log
+/debian/*.substvars
+/debian/*.debhelper
+/debian/files
+/debian/debhelper-build-stamp

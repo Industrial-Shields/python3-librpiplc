@@ -1,0 +1,7 @@
+Files: librpiplc/*
+Copyright: 2025 Industrial Shields <support@industrialshields.com>
+License: LGPL-3+
+
+Files: examples/*
+Copyright: 2025 Industrial Shields <support@industrialshields.com>
+License: GPL-3+

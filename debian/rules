@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+export PYBUILD_NAME=python3-librpiplc
+
+
+%:
+	dh $@ --with python3 --buildsystem=pybuild
+
+override_dh_auto_install:
+	PYTHONDONTWRITEBYTECODE=1 dh_auto_install
