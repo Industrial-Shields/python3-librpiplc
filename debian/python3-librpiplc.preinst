@@ -1,32 +1,34 @@
 #!/bin/bash
-set -e
+set -euo
 
 # Script to erase python3-librpiplc installation from older images
 
 
 
-is_file_not_owned_by_dpkg() {
+is_file_owned_by_dpkg() {
     local file_path="$1"
 
     if dpkg -S "$file_path" &> /dev/null; then
-	return 1
+	return 0
     fi
 
-    return 0
+    return 1
 }
 
 
 
-librpiplc_path="$(pip show -f python3-librpiplc | grep Location | cut -d' ' -f 2)"
-
-if is_file_not_owned_by_dpkg "$librpiplc_path/librpiplc"; then
-    echo "Uninstalling python3-librpiplc before installing..."
-   
-    if pip uninstall --help | grep -q -- '--break-system-packages'; then
-	args_pip="--break-system-packages --root-user-action=ignore"
-    else
-	args_pip=""
-    fi
-
-    pip uninstall $args_pip -y python3-librpiplc
+librpiplc_path="$(pip show -f python3-librpiplc 2>/dev/null | grep Location | cut -d' ' -f 2)/librpiplc"
+if [ ! -e "$librpiplc_path" ] || is_file_owned_by_dpkg "$librpiplc_path"; then
+    exit 0
 fi
+
+
+echo "Uninstalling python3-librpiplc before installing..."
+   
+if pip uninstall --help | grep -q -- '--break-system-packages'; then
+    args_pip="--break-system-packages --root-user-action=ignore"
+else
+    args_pip=""
+fi
+
+pip uninstall $args_pip -y python3-librpiplc
