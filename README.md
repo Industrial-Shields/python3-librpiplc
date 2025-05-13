@@ -192,14 +192,16 @@ if __name__ == "__main__":
 RPIPLC_V3 (deprecated)
 RPIPLC_V4
 RPIPLC_V6
+
 UPSAFEPI_V6
+
 GATEBERRY_V9
 ```
 
 
 ### <a name="available-models"></a>Available PLC models
 ```
-RPIPLC
+RPIPLC_CPU
 RPIPLC_19R
 RPIPLC_21
 RPIPLC_38AR

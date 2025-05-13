@@ -178,6 +178,7 @@ relay2 = {
 
 hw = {
 	"RPIPLC": PLCMappingDict({}),
+        "RPIPLC_CPU": PLCMappingDict({}),
 	"RPIPLC_19R": PLCMappingDict({**relay0}),
         "RPIPLC_21": PLCMappingDict({**analog0}),
         "RPIPLC_38AR": PLCMappingDict({**analog0, **relay1}),

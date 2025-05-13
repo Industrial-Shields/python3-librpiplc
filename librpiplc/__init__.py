@@ -262,6 +262,13 @@ class RPIPLCClass:
         Raises:
             UnknownPLCConf: If the version or model is unknown.
         """
+        if model_name == "RPIPLC":
+            warnings.warn(
+                "RPIPLC model is deprecated, please use RPIPLC_CPU instead.",
+                category=DeprecationWarning,
+                stacklevel=2
+            )
+
         available_versions = {
             "RPIPLC_V6": "rpiplc_mapping_v6",
             "RPIPLC_V4": "rpiplc_mapping_v4",
@@ -377,7 +384,7 @@ class RPIPLCClass:
         if isinstance(level, int):
             warnings.warn(
                 "Passing an int to digital_write is not recommended, use HIGH, LOW, booleans, or " \
-                "the DigitalLevel enum. The usage of int will be removed in future versions.",
+                "the DigitalLevel enum. The usage of integers will be removed in future versions.",
                 category=DeprecationWarning,
                 stacklevel=2
             )
