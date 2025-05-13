@@ -88,10 +88,9 @@ class RPIPLCClass:
         self._mapping = PLCMappingDict({})
         self._is_initialized = False
         libname = find_library("rpiplc")
-        if libname != "":
-            self._dyn_lib: ctypes.CDLL = ctypes.cdll.LoadLibrary(libname)
-        else:
+        if not libname:
             raise OSError("librpiplc is not installed in this system")
+        self._dyn_lib: ctypes.CDLL = ctypes.cdll.LoadLibrary(libname)
 
         incompatible_msg = "The librpiplc C library is not compatible with this Python library"
 
