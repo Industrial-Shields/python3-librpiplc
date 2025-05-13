@@ -273,7 +273,8 @@ class RPIPLCClass:
             "RPIPLC_V4": "rpiplc_mapping_v4",
             "RPIPLC_V3": "rpiplc_mapping_v3",
             "UPSAFEPI_V6": "upsafepi_mapping_v6",
-            "GATEBERRY_V9": "gateberry_mapping_v9"
+            "GATEBERRY_V9": "gateberry_mapping_v9",
+            "TOUCHBERRY_PI_V1": "toucberry_pi_mapping_v1",
         }
 
         hw = {}
