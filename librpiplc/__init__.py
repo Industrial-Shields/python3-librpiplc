@@ -216,6 +216,8 @@ class RPIPLCClass:
         # Populate arrayADS1015
         if version_name == "RPIPLC_V3":
             ads1015_array = (ctypes.c_uint8 * 4)(0x48, 0x49, 0x4A, 0x4B)
+        elif version_name == "TOUCHBERRY_PI_V1":
+            ads1015_array = (ctypes.c_uint8 * 1)(0x49)
         else:
             ads1015_array = (ctypes.c_uint8 * 0)()
         self._c_struct.arrayADS1015 = ads1015_array
