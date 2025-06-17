@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo
+set -e
 
 # Script to erase python3-librpiplc installation from older images
 
@@ -16,6 +16,24 @@ is_file_owned_by_dpkg() {
 }
 
 
+ask_yes_no() {
+    local prompt="$1"
+    local answer
+
+    while true; do
+        read -p "$prompt (N/y): " answer
+        answer=$(echo "$answer" | tr '[:upper:]' '[:lower:]')
+
+        if [[ "$answer" == "y" ]]; then
+            return 0
+        elif [[ "$answer" == "n" || -z "$answer" ]]; then
+            return 1
+        else
+            echo "Invalid input. Please enter 'y' or 'n'."
+        fi
+    done
+}
+
 
 librpiplc_path="$(pip show -f python3-librpiplc 2>/dev/null | grep Location | cut -d' ' -f 2)/librpiplc"
 if [ ! -e "$librpiplc_path" ] || is_file_owned_by_dpkg "$librpiplc_path"; then
@@ -23,7 +41,20 @@ if [ ! -e "$librpiplc_path" ] || is_file_owned_by_dpkg "$librpiplc_path"; then
 fi
 
 
-echo "Uninstalling python3-librpiplc before installing..."
+prompt=$(cat << 'EOF'
+Older python3-librpiplc version detected.
+
+If you proceed with the installation, the older library files will be deleted.
+
+Do you want to proceed with the python3-librpiplc installation?
+EOF
+)
+if ask_yes_no "$prompt"; then
+    echo "Installation will proceed..."
+else
+    echo "Installation will not proceed..."
+    exit 1
+fi
    
 if pip uninstall --help | grep -q -- '--break-system-packages'; then
     args_pip="--break-system-packages --root-user-action=ignore"
