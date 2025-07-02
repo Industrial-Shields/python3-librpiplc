@@ -180,7 +180,6 @@ extras = {
 }
 
 hw = {
-    "RPIPLC": PLCMappingDict({**extras}),
     "RPIPLC_CPU": PLCMappingDict({**extras}),
     "RPIPLC_19R": PLCMappingDict({**relay0, **extras}),
     "RPIPLC_21": PLCMappingDict({**analog0, **extras}),

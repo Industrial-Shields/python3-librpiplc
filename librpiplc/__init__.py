@@ -242,7 +242,7 @@ class RPIPLCClass:
 
         # Populate arrayLTC2309
         if version_name in ["RPIPLC_V4", "RPIPLC_V6"]:
-            if model_name in ["RPIPLC_21", "RPIPLC_19R", "RPIPLC"]:
+            if model_name in ["RPIPLC_21", "RPIPLC_19R", "RPIPLC_CPU"]:
                 ltc2309_array = (ctypes.c_uint8 * 2)(0x08, 0x0A)
             else:
                 ltc2309_array = (ctypes.c_uint8 * 3)(0x08, 0x0A, 0x28)
@@ -273,6 +273,7 @@ class RPIPLCClass:
 
         """
         if model_name == "RPIPLC":
+            model_name = "RPIPLC_CPU"
             warnings.warn(
                 "RPIPLC model is deprecated, please use RPIPLC_CPU instead.",
                 category=DeprecationWarning,
