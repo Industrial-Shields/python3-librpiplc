@@ -1,5 +1,5 @@
 """
-Copyright (c) 2024 Industrial Shields. All rights reserved
+Copyright (c) 2024 Industrial Shields. All rights reserved.
 
 This file is part of python3-librpiplc.
 
@@ -17,19 +17,22 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from setuptools import find_packages, setup
-from pathlib import Path
 import sys
-sys.path.append(str(Path(__file__).parent))
-from librpiplc import rpiplc
+from pathlib import Path
 
+from setuptools import find_packages, setup
+
+sys.path.append(str(Path(__file__).parent))
+from librpiplc.__about__ import __version__
 
 setup(
-        name = "python3-librpiplc",
-        version = rpiplc.python_version,
-        packages = find_packages(include = ["librpiplc"]),
-        description = "Industrial Shields librpiplc bindings for Python 3",
-        author = "Industrial Shields",
-        license = "LGPL-3.0-or-later",
-        classifier = ["License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)"]
-        )
+    name="python3-librpiplc",
+    version=__version__,
+    packages=find_packages(include=["librpiplc"]),
+    description="Industrial Shields librpiplc bindings for Python 3",
+    author="Industrial Shields",
+    license="LGPL-3.0-or-later",
+    classifier=[
+        "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)"
+        ],
+)
