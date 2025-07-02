@@ -295,7 +295,7 @@ class RPIPLCClass:
                 module_name = f"old_{module_name}"
             hw = __import__(f"librpiplc.{module_name}", fromlist=["hw"]).hw
         except KeyError as exc:
-            pretty_versions = "\n" + "\n".join(hw.keys())
+            pretty_versions = "\n" + "\n".join(available_versions.keys())
             error_str = (
                 f"Unknown version {version_name}, the only available versions "
                 f"for {version_name} are:{pretty_versions}"
