@@ -404,7 +404,9 @@ class RPIPLCClass:
             int: Return code from the digitalWrite function (0 for success, non-zero for failure).
 
         """
-        if isinstance(level, int):
+        if isinstance(level, bool):
+            level = self.HIGH if level else self.LOW
+        elif isinstance(level, int):
             warnings.warn(
                 "Passing an int to digital_write is not recommended, use HIGH, LOW, booleans, or "
                 "the DigitalLevel enum. The usage of integers will be removed in future versions.",
@@ -412,8 +414,6 @@ class RPIPLCClass:
                 stacklevel=2,
             )
             level = self.HIGH if level > 0 else self.LOW
-        elif isinstance(level, bool):
-            level = self.HIGH if level else self.LOW
         return int(self._dyn_lib.digitalWrite(self._mapping[pin_name], level.value))
 
     def digital_read(self, pin_name: str) -> int:
