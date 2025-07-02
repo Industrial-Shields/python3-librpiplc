@@ -458,5 +458,10 @@ class RPIPLCClass:
         self._dyn_lib.delayMicroseconds(value)
 
 
+def is_installing() -> bool:
+    """Return true if we are using pip to install the package."""
+    return "pip" in sys.modules or "pip" in os.environ.get("PYTHONPATH", "")
 
-rpiplc = RPIPLCClass()
+
+if not is_installing():
+    rpiplc = RPIPLCClass()
