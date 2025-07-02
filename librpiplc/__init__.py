@@ -141,14 +141,9 @@ class RPIPLCClass:
         functions in the C library to ensure proper interaction between
         Python and C.
         """
-        if not self._is_library_old:
-            # int initExpandedGPIOV2(bool restart);
-            self._dyn_lib.initExpandedGPIOV2.argtypes = [ctypes.c_bool]
-            self._dyn_lib.initExpandedGPIOV2.restype = ctypes.c_int
-        else:
-            # int initExpandedGPIO(bool restart);
-            self._dyn_lib.initExpandedGPIO.argtypes = [ctypes.c_bool]
-            self._dyn_lib.initExpandedGPIO.restype = ctypes.c_int
+        # int initExpandedGPIO(bool restart);
+        self._dyn_lib.initExpandedGPIO.argtypes = [ctypes.c_bool]
+        self._dyn_lib.initExpandedGPIO.restype = ctypes.c_int
 
         # int deinitExpandedGPIO(void);
         self._dyn_lib.deinitExpandedGPIO.argtypes = []
@@ -301,9 +296,7 @@ class RPIPLCClass:
 
         if not self._is_library_old:
             self._c_populate_arrays(version_name, model_name)
-            rc = int(self._dyn_lib.initExpandedGPIOV2(restart))
-        else:
-            rc = int(self._dyn_lib.initExpandedGPIO(restart))
+        rc = int(self._dyn_lib.initExpandedGPIO(restart))
         self._is_initialized = rc in (0, 1)
         return rc
 
