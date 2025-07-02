@@ -1,5 +1,5 @@
 """
-Copyright (c) 2025 Industrial Shields. All rights reserved
+Copyright (c) 2025 Industrial Shields. All rights reserved.
 
 This file is part of python3-librpiplc.
 
@@ -16,34 +16,32 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-from .mapping import PLCMappingDict, make_pin_direct, make_pin_ads1015
+
+from .mapping import PLCMappingDict, make_pin_ads1015, make_pin_direct
 
 extras = {
-	"RE": make_pin_direct(17),
-        "DE": make_pin_direct(27),
-        "CS0": make_pin_direct(8),
-        "CS1": make_pin_direct(7),
-
-	"EXP1_AN": 0xFFFFFFFF,
-        "EXP1_PWM": 0xFFFFFFFF,
-        "EXP1_INT": 0xFFFFFFFF,
-        "EXP1_RST": 0xFFFFFFFF,
-
-	"I0_4_20": make_pin_ads1015(0x49, 0x01),
-        "I1_4_20": make_pin_ads1015(0x49, 0x00),
-        "I0": make_pin_ads1015(0x49, 0x02),
-        "I1": make_pin_ads1015(0x49, 0x03),
-        "I2": make_pin_direct(20),
-        "I3": make_pin_direct(21),
-        "I4": make_pin_direct(26),
-
-        "O0": make_pin_direct(19),
-        "O1": make_pin_direct(6),
-        "O2": make_pin_direct(5),
-        "O3": make_pin_direct(22),
-        "O4": make_pin_direct(4),
+    "RE": make_pin_direct(17),
+    "DE": make_pin_direct(27),
+    "CS0": make_pin_direct(8),
+    "CS1": make_pin_direct(7),
+    "EXP1_AN": 0xFFFFFFFF,
+    "EXP1_PWM": 0xFFFFFFFF,
+    "EXP1_INT": 0xFFFFFFFF,
+    "EXP1_RST": 0xFFFFFFFF,
+    "I0_4_20": make_pin_ads1015(0x49, 0x01),
+    "I1_4_20": make_pin_ads1015(0x49, 0x00),
+    "I0": make_pin_ads1015(0x49, 0x02),
+    "I1": make_pin_ads1015(0x49, 0x03),
+    "I2": make_pin_direct(20),
+    "I3": make_pin_direct(21),
+    "I4": make_pin_direct(26),
+    "O0": make_pin_direct(19),
+    "O1": make_pin_direct(6),
+    "O2": make_pin_direct(5),
+    "O3": make_pin_direct(22),
+    "O4": make_pin_direct(4),
 }
 
 hw = {
-	"TOUCHBERRY_PI": PLCMappingDict({**extras})
+    "TOUCHBERRY_PI": PLCMappingDict({**extras}),
 }

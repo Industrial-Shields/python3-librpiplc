@@ -1,5 +1,5 @@
 """
-Copyright (c) 2025 Industrial Shields. All rights reserved
+Copyright (c) 2025 Industrial Shields. All rights reserved.
 
 This file is part of python3-librpiplc.
 
@@ -16,17 +16,18 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+
 from .mapping import PLCMappingDict
 
 extras = {
-	"DE_RE": 27,
-        "EXP_RST": 26,
-        "EXP_CS": 11,
-        "EXP_AN": 16,
-        "EXP_PWM": 20,
-        "EXP_INT": 21,
+    "DE_RE": 27,
+    "EXP_RST": 26,
+    "EXP_CS": 11,
+    "EXP_AN": 16,
+    "EXP_PWM": 20,
+    "EXP_INT": 21,
 }
 
 hw = {
-	"GATEBERRY": PLCMappingDict({**extras})
+    "GATEBERRY": PLCMappingDict({**extras}),
 }

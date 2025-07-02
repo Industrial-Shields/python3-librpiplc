@@ -1,5 +1,5 @@
 """
-Copyright (c) 2025 Industrial Shields. All rights reserved
+Copyright (c) 2025 Industrial Shields. All rights reserved.
 
 This file is part of python3-librpiplc.
 
@@ -16,17 +16,22 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-class UnknownPLCConf(Exception):
-    """
-    Exception raised for invalid PLC configuration parameters.
-    """
+
+
+class UnknownPLCConfError(Exception):
+    """Exception raised for invalid PLC configuration parameters."""
+
     def __init__(self, message: str) -> None:
+        """Init method."""
         super().__init__(message)
 
 
-class UnknownPin(KeyError):
-    """
-    Exception raised for unknown pins in a dictionary.
-    """
+UnknownPLCConf = UnknownPLCConfError  # Alias for backwards compatibility
+
+
+class UnknownPinError(KeyError):
+    """Exception raised for unknown pins in a dictionary."""
+
     def __init__(self, key: str) -> None:
+        """Init method."""
         super().__init__(f"Unknown pin: '{key}'")

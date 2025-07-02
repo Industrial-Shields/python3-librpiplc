@@ -1,5 +1,5 @@
 """
-Copyright (c) 2025 Industrial Shields. All rights reserved
+Copyright (c) 2025 Industrial Shields. All rights reserved.
 
 This file is part of python3-librpiplc.
 
@@ -17,14 +17,26 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from contextlib import contextmanager
+from __future__ import annotations
+
 import ctypes
-from ctypes.util import find_library
-from typing import Generator, Optional, Union
+import os
+import sys
 import warnings
+from contextlib import contextmanager
+from ctypes.util import find_library
+from typing import TYPE_CHECKING, Any, ClassVar
+
+from .__about__ import __major__, __minor__, __patch__, __version__
+from .exceptions import UnknownPLCConfError
 from .lib_types import DigitalLevel, PinType
-from .exceptions import UnknownPLCConf
 from .mapping import PLCMappingDict
+
+if TYPE_CHECKING:
+    from collections.abc import Generator
+
+
+C_ABI_VERSION_4 = 4
 
 
 class CPeripherals(ctypes.Structure):
@@ -42,9 +54,10 @@ class CPeripherals(ctypes.Structure):
         numArrayLTC2309 (ctypes.c_size_t): Number of LTC2309 addresses.
         arrayMCP23017 (ctypes.POINTER(ctypes.c_uint8)): Pointer to an array of MCP23017 addresses.
         numArrayMCP23017 (ctypes.c_size_t): Number of MCP23017 addresses.
+
     """
-    # pylint: disable=too-few-public-methods
-    _fields_ = [
+
+    _fields_: ClassVar[list[tuple[str, Any]]] = [
         ("arrayMCP23008", ctypes.POINTER(ctypes.c_uint8)),
         ("numArrayMCP23008", ctypes.c_size_t),
         ("arrayADS1015", ctypes.POINTER(ctypes.c_uint8)),
@@ -54,7 +67,7 @@ class CPeripherals(ctypes.Structure):
         ("arrayLTC2309", ctypes.POINTER(ctypes.c_uint8)),
         ("numArrayLTC2309", ctypes.c_size_t),
         ("arrayMCP23017", ctypes.POINTER(ctypes.c_uint8)),
-        ("numArrayMCP23017", ctypes.c_size_t)
+        ("numArrayMCP23017", ctypes.c_size_t),
     ]
 
 
@@ -69,9 +82,9 @@ class RPIPLCClass:
         OUTPUT (PinType): Constant for output pin mode.
         LOW (DigitalLevel): Constant for low digital level.
         HIGH (DigitalLevel): Constant for high digital level.
+
     """
 
-    # pylint: disable=too-many-instance-attributes
     INPUT = PinType.INPUT
     OUTPUT = PinType.OUTPUT
     LOW = DigitalLevel.LOW
@@ -79,67 +92,69 @@ class RPIPLCClass:
 
     def __init__(self) -> None:
         """
-        Initialize the RPIPLCClass instance and loads the C library into memory. If some symbol is
-        undefined, it will raise UnknownPLCConf.
+        Initialize the RPIPLCClass instance and loads the C library into memory.
+
+        If some symbol is undefined, it will raise UnknownPLCConfError.
 
         Raises:
-            UnknownPLCConf: If the C library version is incompatible.
+            UnknownPLCConfError: If the C library version is incompatible.
+
         """
         self._mapping = PLCMappingDict({})
         self._is_initialized = False
         libname = find_library("rpiplc")
         if not libname:
-            raise OSError("librpiplc is not installed in this system")
+            msg = "librpiplc is not installed in this system"
+            raise OSError(msg)
         self._dyn_lib: ctypes.CDLL = ctypes.cdll.LoadLibrary(libname)
 
         incompatible_msg = "The librpiplc C library is not compatible with this Python library"
 
         try:
-            c_version_major = ctypes.c_int.in_dll(self._dyn_lib, "LIB_RPIPLC_VERSION_MAJOR_NUM") \
-                                          .value
-            c_version_minor = ctypes.c_int.in_dll(self._dyn_lib, "LIB_RPIPLC_VERSION_MINOR_NUM") \
-                                          .value
-            c_version_patch = ctypes.c_int.in_dll(self._dyn_lib, "LIB_RPIPLC_VERSION_PATCH_NUM") \
-                                          .value
+            c_version_major = ctypes.c_int.in_dll(
+                self._dyn_lib, "LIB_RPIPLC_VERSION_MAJOR_NUM"
+            ).value
+            c_version_minor = ctypes.c_int.in_dll(
+                self._dyn_lib, "LIB_RPIPLC_VERSION_MINOR_NUM"
+            ).value
+            c_version_patch = ctypes.c_int.in_dll(
+                self._dyn_lib, "LIB_RPIPLC_VERSION_PATCH_NUM"
+            ).value
             c_version = ctypes.c_char_p.in_dll(self._dyn_lib, "LIB_RPIPLC_VERSION").value
-            if c_version is None \
-               or c_version_patch is None \
-               or c_version_minor is None \
-               or c_version_major is None:
-                raise UnknownPLCConf(incompatible_msg)
+            if (
+                c_version is None
+                or c_version_patch is None
+                or c_version_minor is None
+                or c_version_major is None
+            ):
+                raise UnknownPLCConfError(incompatible_msg)
 
             self.c_version_major = c_version_major
             self.c_version_minor = c_version_minor
             self.c_version_patch = c_version_patch
             self.c_version = c_version.decode("utf-8")
         except ValueError as exc:
-            raise UnknownPLCConf(incompatible_msg) from exc
+            raise UnknownPLCConfError(incompatible_msg) from exc
 
         self.python_version_major = __major__
         self.python_version_minor = __minor__
         self.python_version_patch = __patch__
         self.python_version = __version__
 
-        self._is_library_old = self.c_version_major < 4
+        self._is_library_old = self.c_version_major < C_ABI_VERSION_4
 
         self._c_prepare_arg_and_return_types()
 
-        self._c_struct: Optional[CPeripherals] = None
+        self._c_struct: CPeripherals | None = None
 
-    def __new__(cls) -> "RPIPLCClass":
-        """
-        Override method to make the class a singleton.
-        """
-        if not hasattr(cls, 'instance'):
-            cls.instance = super(RPIPLCClass, cls).__new__(cls)
+    def __new__(cls) -> RPIPLCClass:  # noqa: PYI034
+        """Override method to make the class a singleton."""
+        if not hasattr(cls, "instance"):
+            cls.instance = super().__new__(cls)
         return cls.instance
 
     def _c_prepare_arg_and_return_types(self) -> None:
-        """
-        This method sets the argument types and return types for various
-        functions in the C library to ensure proper interaction between
-        Python and C.
-        """
+        """Set the function argument and return types of the C library."""
         # int initExpandedGPIO(bool restart);
         self._dyn_lib.initExpandedGPIO.argtypes = [ctypes.c_bool]
         self._dyn_lib.initExpandedGPIO.restype = ctypes.c_int
@@ -189,7 +204,6 @@ class RPIPLCClass:
         self._dyn_lib.analogWriteAll.argtypes = [ctypes.c_uint8, ctypes.POINTER(ctypes.c_void_p)]
         self._dyn_lib.analogWriteAll.restype = ctypes.c_int
 
-
     def _c_populate_arrays(self, version_name: str, model_name: str) -> None:
         """
         Populate the library's peripheral arrays based on the version and model.
@@ -197,6 +211,7 @@ class RPIPLCClass:
         Args:
             version_name (str): The version name of the PLC.
             model_name (str): The model name of the PLC.
+
         """
         self._c_struct = CPeripherals.in_dll(self._dyn_lib, "_peripherals_struct")
 
@@ -240,8 +255,7 @@ class RPIPLCClass:
         self._c_struct.arrayMCP23017 = mcp23017_array
         self._c_struct.numArrayMCP23017 = len(mcp23017_array)
 
-
-    def init(self, version_name: str, model_name: str, restart: bool = False) -> int:
+    def init(self, version_name: str, model_name: str, *, restart: bool = False) -> int:
         """
         Initialize the RPIPLC library with the specified version and model.
 
@@ -255,13 +269,14 @@ class RPIPLCClass:
                  already initialized, others for failure).
 
         Raises:
-            UnknownPLCConf: If the version or model is unknown.
+            UnknownPLCConfError: If the version or model is unknown.
+
         """
         if model_name == "RPIPLC":
             warnings.warn(
                 "RPIPLC model is deprecated, please use RPIPLC_CPU instead.",
                 category=DeprecationWarning,
-                stacklevel=2
+                stacklevel=2,
             )
 
         available_versions = {
@@ -280,18 +295,22 @@ class RPIPLCClass:
                 module_name = f"old_{module_name}"
             hw = __import__(f"librpiplc.{module_name}", fromlist=["hw"]).hw
         except KeyError as exc:
-            pretty_versions = "\n" + '\n'.join(hw.keys())
-            error_str = f"Unknown version {version_name}, the only available versions" \
+            pretty_versions = "\n" + "\n".join(hw.keys())
+            error_str = (
+                f"Unknown version {version_name}, the only available versions "
                 f"for {version_name} are:{pretty_versions}"
-            raise UnknownPLCConf(error_str) from exc
+            )
+            raise UnknownPLCConfError(error_str) from exc
 
         try:
             self._mapping = hw[model_name]
         except KeyError as exc:
-            pretty_models = "\n" + '\n'.join(hw.keys())
-            error_str = f"Unknown model {model_name}, the only available models" \
+            pretty_models = "\n" + "\n".join(hw.keys())
+            error_str = (
+                f"Unknown model {model_name}, the only available models "
                 f"for {version_name} are:{pretty_models}"
-            raise UnknownPLCConf(error_str) from exc
+            )
+            raise UnknownPLCConfError(error_str) from exc
 
         if not self._is_library_old:
             self._c_populate_arrays(version_name, model_name)
@@ -299,13 +318,15 @@ class RPIPLCClass:
         self._is_initialized = rc in (0, 1)
         return rc
 
-
     @contextmanager
-    def with_init(self,
-                  version_name: str,
-                  model_name: str,
-                  restart: bool = False,
-                  restart_when_closing: bool = True) -> Generator[int, None, None]:
+    def with_init(
+        self,
+        version_name: str,
+        model_name: str,
+        *,
+        restart: bool = False,
+        restart_when_closing: bool = True,
+    ) -> Generator[int, None, None]:
         """
         Context manager to initialize the rpiplc singleton with "with" statements.
 
@@ -313,15 +334,18 @@ class RPIPLCClass:
             version_name (str): The version name of the PLC.
             model_name (str): The model name of the PLC.
             restart (bool): Whether to restart the peripherals or not (default is False).
+            restart_when_closing (bool): Whether to restart the peripherals when exiting the with
+                                         block.
 
         Raises:
-            UnknownPLCConf: If the version or model is unknown.
-        """
-        rc = self.init(version_name, model_name, restart)
-        yield rc
-        self.deinit()
+            UnknownPLCConfError: If the version or model is unknown.
 
-    def deinit(self, restart: bool = True) -> int:
+        """
+        rc = self.init(version_name, model_name, restart=restart)
+        yield rc
+        self.deinit(restart=restart_when_closing)
+
+    def deinit(self, *, restart: bool = True) -> int:
         """
         Deinitialize the RPIPLC library.
 
@@ -330,8 +354,11 @@ class RPIPLCClass:
         Returns:
             int: Return code from the deinitialization function (0 for success, 1 if it was already
                  deinitialized, others for failure).
+
         Raises:
-            UnknownPLCConf: If the library version doesn't support not restarting when calling deinit
+            UnknownPLCConfError: If the library version doesn't support not restarting when calling
+                            deinit.
+
         """
         if not self._is_library_old:
             if restart:
@@ -340,7 +367,8 @@ class RPIPLCClass:
                 rc = int(self._dyn_lib.deinitExpandedGPIONoReset())
         else:
             if not restart:
-                raise UnknownPLCConf("This library version doesn't support de-initializing without restarting")
+                msg = "This library version doesn't support de-initializing without restarting"
+                raise UnknownPLCConfError(msg)
             rc = int(self._dyn_lib.deinitExpandedGPIO())
 
         if rc in (0, 2):
@@ -349,7 +377,6 @@ class RPIPLCClass:
             self._c_struct = None
 
         return rc
-
 
     def pin_mode(self, pin_name: str, mode: PinType) -> int:
         """
@@ -361,10 +388,11 @@ class RPIPLCClass:
 
         Returns:
             int: Return code from the pinMode function (0 for success, non-zero for failure).
+
         """
         return int(self._dyn_lib.pinMode(self._mapping[pin_name], mode.value))
 
-    def digital_write(self, pin_name: str, level: Union[DigitalLevel, int, bool]) -> int:
+    def digital_write(self, pin_name: str, level: DigitalLevel | int | bool) -> int:  # noqa: FBT001
         """
         Write a digital value to a specified pin.
 
@@ -374,13 +402,14 @@ class RPIPLCClass:
 
         Returns:
             int: Return code from the digitalWrite function (0 for success, non-zero for failure).
+
         """
         if isinstance(level, int):
             warnings.warn(
-                "Passing an int to digital_write is not recommended, use HIGH, LOW, booleans, or " \
+                "Passing an int to digital_write is not recommended, use HIGH, LOW, booleans, or "
                 "the DigitalLevel enum. The usage of integers will be removed in future versions.",
                 category=DeprecationWarning,
-                stacklevel=2
+                stacklevel=2,
             )
             level = self.HIGH if level > 0 else self.LOW
         elif isinstance(level, bool):
@@ -396,6 +425,7 @@ class RPIPLCClass:
 
         Returns:
             int: The digital value read from the pin (0 or 1).
+
         """
         return int(self._dyn_lib.digitalRead(self._mapping[pin_name]))
 
@@ -410,6 +440,7 @@ class RPIPLCClass:
         Returns:
             int: Return code from the analogWriteSetFrequency function (0 for success, non-zero for
                  failure).
+
         """
         return int(self._dyn_lib.analogWriteSetFrequency(self._mapping[pin_name], freq))
 
@@ -423,6 +454,7 @@ class RPIPLCClass:
 
         Returns:
             int: Return code from the analogWrite function (0 for success, non-zero for failure).
+
         """
         return int(self._dyn_lib.analogWrite(self._mapping[pin_name], value))
 
@@ -435,6 +467,7 @@ class RPIPLCClass:
 
         Returns:
             int: The analog value read from the pin (it's normally a number between 0 and 4095).
+
         """
         return int(self._dyn_lib.analogRead(self._mapping[pin_name]))
 
@@ -444,6 +477,7 @@ class RPIPLCClass:
 
         Args:
             value (int): The number of milliseconds to delay.
+
         """
         self._dyn_lib.delay(value)
 
@@ -453,6 +487,7 @@ class RPIPLCClass:
 
         Args:
             value (int): The number of microseconds to delay.
+
         """
         self._dyn_lib.delayMicroseconds(value)
 

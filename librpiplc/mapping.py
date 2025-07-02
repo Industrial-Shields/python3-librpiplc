@@ -1,5 +1,5 @@
 """
-Copyright (c) 2025 Industrial Shields. All rights reserved
+Copyright (c) 2025 Industrial Shields. All rights reserved.
 
 This file is part of python3-librpiplc.
 
@@ -16,21 +16,22 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-from typing import Dict
-from .exceptions import UnknownPin
+
+from .exceptions import UnknownPinError
 from .lib_types import PeripheralType
 
 
-
-class PLCMappingDict(Dict[str, int]):
+class PLCMappingDict(dict[str, int]):
     """
     A dictionary that maps pin names to their corresponding integer values.
 
     This class extends the built-in dictionary to provide custom behavior
     for retrieving pin values.
     """
+
     def __getitem__(self, key: str) -> int:
-        """Retrieve the integer value associated with the given pin name.
+        """
+        Retrieve the integer value associated with the given pin name.
 
         Args:
             key (str): The name of the pin to retrieve.
@@ -40,17 +41,18 @@ class PLCMappingDict(Dict[str, int]):
 
         Raises:
             UnknownPin: If the pin name does not exist in the dictionary.
+
         """
         try:
             return int(super().__getitem__(key))
         except KeyError:
             pass
-        raise UnknownPin(key)
+        raise UnknownPinError(key)
 
 
 def _make_pin_plc(peripheral_type: PeripheralType, byte2: int, byte3: int, byte4: int) -> int:
     """
-    Construct a pin identifier for a peripheral according to the librpiplc specifications
+    Construct a pin identifier for a peripheral according to the librpiplc specifications.
 
     Args:
         peripheral_type (PeripheralType): The type of peripheral (e.g., PLC_DIRECT, PLC_PCA9685).
@@ -60,11 +62,15 @@ def _make_pin_plc(peripheral_type: PeripheralType, byte2: int, byte3: int, byte4
 
     Returns:
         int: The constructed pin identifier.
+
     """
-    return ((peripheral_type.value & 0xFF) << 24) | \
-        ((byte2 & 0xFF) << 16) | \
-        ((byte3 & 0xFF) << 8) | \
-        (byte4 & 0xFF)
+    return (
+        ((peripheral_type.value & 0xFF) << 24)
+        | ((byte2 & 0xFF) << 16)
+        | ((byte3 & 0xFF) << 8)
+        | (byte4 & 0xFF)
+    )
+
 
 def make_pin_direct(index: int) -> int:
     """
@@ -75,11 +81,12 @@ def make_pin_direct(index: int) -> int:
 
     Returns:
         int: The constructed pin identifier for the direct PLC GPIO.
+
     """
-    return _make_pin_plc(PeripheralType.PLC_DIRECT, \
-                         (index & 0xFF0000) >> 16, \
-                         (index & 0xFF00) >> 8, \
-                         index)
+    return _make_pin_plc(
+        PeripheralType.PLC_DIRECT, (index & 0xFF0000) >> 16, (index & 0xFF00) >> 8, index
+    )
+
 
 def make_pin_pca9685(addr: int, index: int) -> int:
     """
@@ -91,8 +98,10 @@ def make_pin_pca9685(addr: int, index: int) -> int:
 
     Returns:
         int: The constructed pin identifier for the PCA9685.
+
     """
     return _make_pin_plc(PeripheralType.PLC_PCA9685, addr, 0x00, index)
+
 
 def make_pin_mcp23008(addr: int, index: int) -> int:
     """
@@ -104,8 +113,10 @@ def make_pin_mcp23008(addr: int, index: int) -> int:
 
     Returns:
         int: The constructed pin identifier for the MCP23008.
+
     """
     return _make_pin_plc(PeripheralType.PLC_MCP23008, addr, 0x00, index)
+
 
 def make_pin_mcp23017(addr: int, index: int) -> int:
     """
@@ -117,8 +128,10 @@ def make_pin_mcp23017(addr: int, index: int) -> int:
 
     Returns:
         int: The constructed pin identifier for the MCP23017.
+
     """
     return _make_pin_plc(PeripheralType.PLC_MCP23017, addr, 0x00, index)
+
 
 def make_pin_ltc2309(addr: int, index: int) -> int:
     """
@@ -130,8 +143,10 @@ def make_pin_ltc2309(addr: int, index: int) -> int:
 
     Returns:
         int: The constructed pin identifier for the LTC2309.
+
     """
     return _make_pin_plc(PeripheralType.PLC_LTC2309, addr, 0x00, index)
+
 
 def make_pin_ads1015(addr: int, index: int) -> int:
     """
@@ -143,5 +158,6 @@ def make_pin_ads1015(addr: int, index: int) -> int:
 
     Returns:
         int: The constructed pin identifier for the ADS1015.
+
     """
     return _make_pin_plc(PeripheralType.PLC_ADS1015, addr, 0x00, index)

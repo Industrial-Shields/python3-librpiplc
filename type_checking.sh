@@ -1,3 +1,8 @@
 #!/bin/bash
+set -euo
 
-python -m mypy --pretty --config-file mypy.ini librpiplc/ setup.py && python -m pyright --pythonversion 3.9 librpiplc/ setup.py
+ruff check librpiplc/
+
+ruff format
+
+mypy --pretty --config-file mypy.ini librpiplc/ setup.py

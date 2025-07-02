@@ -34,5 +34,16 @@ setup(
     license="LGPL-3.0-or-later",
     classifier=[
         "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)"
+    ],
+    extras_require={
+        "dev": [
+            "python-lsp-server~=1.12.2",
+            "ruff~=0.12.1",
+            "python-lsp-ruff~=2.2.2",
+            "mypy~=1.16.1",
+            "pylsp-mypy~=0.7.0",
+            "mccabe~=0.7.0",
+            "types-setuptools~=80.9.0.20250529",
         ],
+    },
 )

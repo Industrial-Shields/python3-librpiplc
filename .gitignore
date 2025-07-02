@@ -12,3 +12,5 @@ venv/
 /debian/*.debhelper
 /debian/files
 /debian/debhelper-build-stamp
+/.envrc
+/.direnv/
