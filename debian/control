@@ -1,0 +1,16 @@
+Source: python3-librpiplc
+Section: libs
+Priority: optional
+Maintainer: Industrial Shields <support@industrialshields.com>
+Build-Depends: librpiplc (>= 4), dh-python (>= 4), python3 (>= 3.9), debhelper (>= 11)
+
+
+Package: python3-librpiplc
+Architecture: all
+Priority: required
+Description: Industrial Shields Pythonlibrary for Raspberry-based PLCs
+ python3-librpiplc implements useful functions to use Raspberry based
+ Industrial Shields PLCs for industrial environments. It also contains
+ some adaptations based on the code structure of the Arduino IDE to
+ make it more familiar.
+Depends: ${python3:Depends}, librpiplc (>= 4)

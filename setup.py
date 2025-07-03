@@ -1,5 +1,5 @@
 """
-Copyright (c) 2024 Industrial Shields. All rights reserved
+Copyright (c) 2024 Industrial Shields. All rights reserved.
 
 This file is part of python3-librpiplc.
 
@@ -17,19 +17,33 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
+import sys
+from pathlib import Path
+
 from setuptools import find_packages, setup
 
-# Helper symlink to make sure not to import the library installed in the system
-from _setup_librpiplc import rpiplc
-
-
+sys.path.append(str(Path(__file__).parent))
+from librpiplc.__about__ import __version__
 
 setup(
-        name = "python3-librpiplc",
-        version = rpiplc.python_version,
-        packages = find_packages(include = ["librpiplc", "librpiplc.folder_rpiplc", "librpiplc.upsafepi"]),
-        description = "Industrial Shields librpiplc bindings for Python 3",
-        author = "Industrial Shields",
-        license = "LGPL-3.0-or-later",
-        classifier = ["License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)"]
-        )
+    name="python3-librpiplc",
+    version=__version__,
+    packages=find_packages(include=["librpiplc"]),
+    description="Industrial Shields librpiplc bindings for Python 3",
+    author="Industrial Shields",
+    license="LGPL-3.0-or-later",
+    classifier=[
+        "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)"
+    ],
+    extras_require={
+        "dev": [
+            "python-lsp-server~=1.12.2",
+            "ruff~=0.12.1",
+            "python-lsp-ruff~=2.2.2",
+            "mypy~=1.16.1",
+            "pylsp-mypy~=0.7.0",
+            "mccabe~=0.7.0",
+            "types-setuptools~=80.9.0.20250529",
+        ],
+    },
+)
