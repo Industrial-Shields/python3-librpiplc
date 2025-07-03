@@ -2,14 +2,48 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [4.0.0] - 2025-07-03
 
 ### 🚀 Features
+
+- [**breaking**] Merge branch 'new-pins-enum' ([36af531](36af53185c6f385b2d024f28c551fe5fa2680c5e))
+
+- [**breaking**] Add Ruff as linter/formatter ([cbe1b0c](cbe1b0c9a5c5ec8ddd708e7c4d2baba848b22eb0))
+
+- Add Touchberry Pi V1 mapping ([5c295e9](5c295e96395c72345bb63cbe6e94ea36faa9f8ba))
+
+- Add old mapping for GateBerry V9 ([ec7ce90](ec7ce90af7b3440ebd2e01e7c1d72ba958d5c0a6))
+
+- Add deprecation warning for RPIPLC, instead use RPIPLC_CPU ([f2d35ae](f2d35ae9715694ab69e39a1dffb3cc52ab46f4fc))
 
 - Add GateBerry V9 click mapping ([3fcd60c](3fcd60c5503562c0e39063ba64e2d8d3c610ef59))
 
 
 ### 🐛 Bug Fixes
+
+- Remove RPIPLC inside the library ([0c13638](0c136387b349f16022474c38ebc3adad63c65c01))
+
+- Show available versions when writting bad PLC version ([6419d87](6419d8720a1c076412ae37b4d9fbca46dfb568e8))
+
+- Don't emit deprecation warning when calling digital_write with bool ([e957bfb](e957bfbd327e94d499550f9fdb5cc23abac56e6a))
+
+- Don't initialize RPIPLCClass if pip is being called ([24b6d50](24b6d50cf3c725b7de06937436d41c370b1cdfe4))
+
+- Add RPIPLC V6 19R model ([ee9a76e](ee9a76e97b550b05b4b628a0014ddbc4e85bd2a9))
+
+- Make an "all" package ([b4f0cfc](b4f0cfca8c1fb438e73d24fe6b956724ccb23c5a))
+
+- Remove initExpandedGPIOV2 ([f4bc045](f4bc045e4ac1073aa961ebde1d58a187f5d0c6ab))
+
+- Add prompt before uninstalling older python3-librpiplc ([484dd66](484dd66f17c227c894b1c90de62a451ac4ec5074))
+
+- Update README with apt package, build instructions and general fixes ([4604340](46043407f965303df81912095a03386dee7e554f))
+
+- Add TouchBerry Pi V1 ADS1015 initialization ([25829d8](25829d8154dc109574a19478372f786237971173))
+
+- Check that librpiplc_path exists before checking if is owned by dpkg ([08c6ed1](08c6ed1a97abb9279538ac591a2ca045e86d0869))
+
+- Ensure that string returned by find_library is not None or an empty string ([b06658a](b06658a58ca2e500db042a10aa0ac9a041c6cc25))
 
 - Fix NoReset argtypes and restype + Do not add the third LTC2309 when using a RPIPLC ([89a1cce](89a1cce8741f1d45e1b79ffd01e595b3183c6112))
 
@@ -17,6 +51,8 @@ All notable changes to this project will be documented in this file.
 
 
 ### 💼 Other
+
+- Update clean_debian target ([2f7e7be](2f7e7be31caaf21b1aa53f4a29a4345cb037e109))
 
 - Make python3-librpiplc a Debian package ([48fd426](48fd426cbc5f25311d294cf48e8a7eecf28c191b))
 
@@ -65,7 +101,14 @@ This reverts commit 5a8bced6faacb9704da34e045d4f5250d5b5df8b. ([7f3f062](7f3f062
 - Add stub to enable dynamic linking with the new librpiplc versions ([5a8bced](5a8bced6faacb9704da34e045d4f5250d5b5df8b))
 
 
+### 🚜 Refactor
+
+- Use __about__.py to save library version ([d4441fd](d4441fd34fc7796c227037e4b2e4147afc1acd7f))
+
+
 ### ⚙️ Miscellaneous Tasks
+
+- Add CHANGELOG ([5c2cf6b](5c2cf6b6110daa4a7dd8cadebcc7911c5e339d0c))
 
 - Bump library version ([a577412](a5774121215fe96c258a817bbda6e1470d4b4c3d))
 
