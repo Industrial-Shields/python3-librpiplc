@@ -91,7 +91,7 @@ To start using the library, you need to import it with the following statement:
 from librpiplc import rpiplc
 ```
 
-And to set it up, you must call `rpiplc.init("VERSION_NAME", "MODEL_NAME")`, where VERSION_NAME and
+And to set it up, you must call `rpiplc.init("VERSION_NAME", "MODEL_NAME", restart=)`, where VERSION_NAME and
 MODEL_NAME are the [available PLC versions](#available-versions) and
 [available PLC models](#available-models) respectively. This function must be called once every time
 you start your program.
@@ -105,13 +105,13 @@ rpiplc.pin_mode("I0.2", rpiplc.INPUT)
 
 The functions to read and write are the following:
 ``` python
-init(): rpiplc.init(VERSION_NAME, MODEL_NAME)
+init(): rpiplc.init(VERSION_NAME, MODEL_NAME, restart=False)
 # Returns 0 if the library was initialized successfully, or 1 if it was already initialized; otherwise, an error occurred.
 
-with_init(): rpiplc.with_init(VERSION_NAME, MODEL_NAME)
+with_init(): rpiplc.with_init(VERSION_NAME, MODEL_NAME, restart=False, restart_when_closing=True)
 # It's the same as init(), but it can be used in the "with" statement.
 
-deinit(): rpiplc.deinit(restart = True)
+deinit(): rpiplc.deinit(restart=True)
 # Returns 0 if the library deinitialized successfully, or 2 if it was already deinitialized; otherwise, an error ocurred.
 # If restart is True, all the PLC peripherals will be restarted to it's original state.
 # Note: restart = False is not supported with older versions of librpiplc (<4.X.X). If you try to call it with an incompatible version,
