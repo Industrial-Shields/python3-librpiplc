@@ -299,7 +299,7 @@ class RPIPLCClass:
             pretty_versions = "\n" + "\n".join(available_versions.keys())
             error_str = (
                 f"Unknown version {version_name}, the only available versions "
-                f"for {version_name} are:{pretty_versions}"
+                f"are:{pretty_versions}"
             )
             raise UnknownPLCConfError(error_str) from exc
 
