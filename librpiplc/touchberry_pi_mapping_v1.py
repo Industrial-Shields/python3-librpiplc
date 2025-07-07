@@ -40,6 +40,11 @@ extras = {
     "O2": make_pin_direct(5),
     "O3": make_pin_direct(22),
     "O4": make_pin_direct(4),
+    "Q0": make_pin_direct(19),
+    "Q1": make_pin_direct(6),
+    "Q2": make_pin_direct(5),
+    "Q3": make_pin_direct(22),
+    "Q4": make_pin_direct(4),
 }
 
 hw = {
