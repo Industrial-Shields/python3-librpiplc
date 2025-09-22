@@ -17,7 +17,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from enum import Enum
+from enum import Enum, IntEnum
 
 
 class PeripheralType(Enum):
@@ -31,14 +31,14 @@ class PeripheralType(Enum):
     PLC_ADS1015 = 5
 
 
-class PinType(Enum):
+class PinType(IntEnum):
     """Enum representing the type of pin configuration."""
 
     INPUT = 0
     OUTPUT = 1
 
 
-class DigitalLevel(Enum):
+class DigitalLevel(IntEnum):
     """Enum representing the digital levels for pins."""
 
     LOW = 0
