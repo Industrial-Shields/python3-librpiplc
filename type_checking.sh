@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo
+set -eu
 
 ruff check librpiplc/
 
