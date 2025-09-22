@@ -22,8 +22,8 @@ from pathlib import Path
 
 from setuptools import find_packages, setup
 
-sys.path.append(str(Path(__file__).parent))
-from librpiplc.__about__ import __version__
+sys.path.insert(0, str(Path(__file__).parent / "librpiplc"))
+from __about__ import __version__
 
 setup(
     name="python3-librpiplc",
