@@ -215,8 +215,9 @@ class RPIPLCClass:
         """
         self._c_struct = CPeripherals.in_dll(self._dyn_lib, "_peripherals_struct")
 
-        if version_name in ["RPIPLC_V3", "RPIPLC_V4", "RPIPLC_V6"]:
-            mcp23008_array = (ctypes.c_uint8 * 2)(0x20, 0x21)
+        if version_name in ["RPIPLC_V3", "RPIPLC_V4", "RPIPLC_V6"] \
+           and model_name != "RPIPLC_CPU":
+                mcp23008_array = (ctypes.c_uint8 * 2)(0x20, 0x21)
         else:
             mcp23008_array = (ctypes.c_uint8 * 0)()
         self._c_struct.arrayMCP23008 = mcp23008_array
@@ -234,15 +235,19 @@ class RPIPLCClass:
 
         # Populate arrayPCA9685
         if version_name in ["RPIPLC_V3", "RPIPLC_V4", "RPIPLC_V6"]:
-            pca9685_array = (ctypes.c_uint8 * 2)(0x40, 0x41)
+            if model_name != "RPIPLC_CPU":
+                pca9685_array = (ctypes.c_uint8 * 2)(0x40, 0x41)
+            else:
+                pca9685_array = (ctypes.c_uint8 * 1)(0x41)
         else:
             pca9685_array = (ctypes.c_uint8 * 0)()
         self._c_struct.arrayPCA9685 = pca9685_array
         self._c_struct.numArrayPCA9685 = len(pca9685_array)
 
         # Populate arrayLTC2309
-        if version_name in ["RPIPLC_V4", "RPIPLC_V6"]:
-            if model_name in ["RPIPLC_21", "RPIPLC_19R", "RPIPLC_CPU"]:
+        if version_name in ["RPIPLC_V4", "RPIPLC_V6"] \
+           and model_name != "RPIPLC_CPU":
+            if model_name in ["RPIPLC_21", "RPIPLC_19R"]:
                 ltc2309_array = (ctypes.c_uint8 * 2)(0x08, 0x0A)
             else:
                 ltc2309_array = (ctypes.c_uint8 * 3)(0x08, 0x0A, 0x28)
