@@ -1,3 +1,10 @@
+python3-librpiplc (4.0.2) bullseye bookworm; urgency=low
+
+  * Add QX mapping that matches TouchBerry serigraphy
+  * Make PinType and DigitalLevel enums "IntEnum"
+
+ -- Industrial Shields <support@industrialshields.com>  Mon, 22 Sep 2025 16:38:00 +0000
+
 python3-librpiplc (4.0.1) bullseye bookworm; urgency=low
 
   * Fix the loading of Touchberry mapping
