@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import ctypes
 import os
+import re
 import sys
 import warnings
 from contextlib import contextmanager
@@ -499,8 +500,9 @@ class RPIPLCClass:
 
 
 def _is_installing() -> bool:
-    """Return true if we are using pip to install the package."""
-    return "pip" in sys.modules or "pip" in os.environ.get("PYTHONPATH", "")
+    """Return True if we are using cross-building the package."""
+    candidates = list(sys.modules.keys()) + os.environ.get("PYTHONPATH", "").split(os.pathsep)
+    return any(re.match(r"/opt/RaspberryDeb/python3-librpiplc/", c) for c in candidates)
 
 
 if not _is_installing():
