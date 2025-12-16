@@ -26,6 +26,7 @@ extras = {
     "EXP_AN": make_pin_direct(16),
     "EXP_PWM": make_pin_direct(20),
     "EXP_INT": make_pin_direct(21),
+    "RS485_TERMINATION": make_pin_direct(17),
 }
 
 hw = {
