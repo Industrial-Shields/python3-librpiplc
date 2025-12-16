@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.1.0] - 2025-12-16
+
+### 🚀 Features
+
+- *(GateBerry V9)* Add RS485 termination pin ([5d20da9](5d20da948f0eb44b183515f3e8ffaaa9a14f7e6a))
+
+
+### 🐛 Bug Fixes
+
+- Make _is_installing function more granular ([7049c5a](7049c5a05ec64e6e1ca35076621ff734d9e0b951))
+
+
+### 🚜 Refactor
+
+- Mark is_installing function as private ([f727f0c](f727f0ca02c8da8d5aef9468dd5164cebc97f9a6))
+
+
+### 📚 Documentation
+
+- Add installation warning in README.md ([1d97896](1d9789618979869f27a499e370c21232d05e6cc7))
+
+
+### ⚙️ Miscellaneous Tasks
+
+- Bump library version ([27a68c5](27a68c552586f9743d03b75f1aa543bdd18556ea))
+
+
 ## [4.0.2] - 2025-09-23
 
 ### 🐛 Bug Fixes
