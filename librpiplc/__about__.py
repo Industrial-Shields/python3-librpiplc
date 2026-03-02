@@ -18,6 +18,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 __major__ = 4
-__minor__ = 0
-__patch__ = 2
+__minor__ = 1
+__patch__ = 1
 __version__ = f"{__major__}.{__minor__}.{__patch__}"
