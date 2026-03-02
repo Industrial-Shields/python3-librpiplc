@@ -26,6 +26,7 @@ import sys
 import warnings
 from contextlib import contextmanager
 from ctypes.util import find_library
+from enum import IntEnum
 from typing import TYPE_CHECKING, Any, ClassVar
 
 from .__about__ import __major__, __minor__, __patch__, __version__
@@ -413,7 +414,7 @@ class RPIPLCClass:
         """
         if isinstance(level, bool):
             level = self.HIGH if level else self.LOW
-        elif isinstance(level, int):
+        elif isinstance(level, int) and not isinstance(level, IntEnum):
             warnings.warn(
                 "Passing an int to digital_write is not recommended, use HIGH, LOW, booleans, or "
                 "the DigitalLevel enum. The usage of integers will be removed in future versions.",
